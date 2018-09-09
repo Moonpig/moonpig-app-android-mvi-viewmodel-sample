@@ -25,8 +25,23 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    testImplementation 'junit:junit:4.12'
+    implementation "android.arch.lifecycle:viewmodel:$lifecycle_version" // use -ktx for Kotlin
+
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxBindingVersion}"
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.0")
+    testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+//    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.0")
+//    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.0")
 }
