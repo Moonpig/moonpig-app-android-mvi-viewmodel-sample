@@ -49,7 +49,7 @@ internal class BaseViewModelTest {
     }
 }
 
-sealed class TestIntent {
+sealed class TestIntent: BaseIntent {
     object First : TestIntent()
     object Second : TestIntent()
 }

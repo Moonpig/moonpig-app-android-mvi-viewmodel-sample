@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-abstract class BaseViewModel<I, VS : BaseViewState, R : BaseResult<VS>>(private val baseIntentProcessor: BaseIntentProcessor<I, R>) :
+abstract class BaseViewModel<I : BaseIntent, VS : BaseViewState, R : BaseResult<VS>>(private val baseIntentProcessor: BaseIntentProcessor<I, R>) :
         ViewModel() {
 
     private val intentSubject = PublishSubject.create<I>()
@@ -43,3 +43,4 @@ interface BaseResult<VS> {
 
 interface BaseViewState
 
+interface BaseIntent
