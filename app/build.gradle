@@ -34,14 +34,10 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxBindingVersion}"
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.0")
+    testImplementation "junit:junit:$junitCoreVersion"
     testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
     testImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-
-//    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.0")
-//    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.0")
 }

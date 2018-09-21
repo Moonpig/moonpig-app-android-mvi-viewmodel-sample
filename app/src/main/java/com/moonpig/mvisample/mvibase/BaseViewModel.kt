@@ -2,14 +2,20 @@ package com.moonpig.mvisample.mvibase
 
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-class BaseViewModel<I, VS>(private val baseIntentProcessor: BaseIntentProcessor<I, VS>) : ViewModel() {
+abstract class BaseViewModel<I, VS : BaseViewState, R : BaseResult<VS>>(private val baseUseCase: BaseUseCase<I, R>) :
+        ViewModel() {
 
     private val intentSubject = PublishSubject.create<I>()
-    private val viewStateObservable = compose()
+    private val viewStateObservable by lazy(::compose)
+    private val reducer = BiFunction<VS, R, VS> { previousViewState, result ->
+        result.reduce(previousViewState)
+    }
 
-    fun processIntents(intents: Observable<I>) {
+    fun bindIntents(intents: Observable<I>) {
         intents.subscribe(intentSubject)
     }
 
@@ -17,12 +23,25 @@ class BaseViewModel<I, VS>(private val baseIntentProcessor: BaseIntentProcessor<
         return viewStateObservable
     }
 
-    private fun compose() : Observable<VS> {
-        return intentSubject.map { baseIntentProcessor.processIntent(it) }
+    private fun compose(): Observable<VS> {
+        return BehaviorSubject.create<VS>().apply {
+            intentSubject.map { baseUseCase.processIntent(it) }
+                    .scan(initialViewState(), reducer)
+                    .distinctUntilChanged()
+                    .subscribe(this)
+        }
     }
 
+    abstract fun initialViewState(): VS
 }
 
-interface BaseIntentProcessor<I, VS> {
-    fun processIntent(intent: I) : VS
+interface BaseUseCase<I, R> {
+    fun processIntent(intent: I): R
 }
+
+interface BaseResult<VS> {
+    fun reduce(previousViewState: VS): VS
+}
+
+interface BaseViewState
+
