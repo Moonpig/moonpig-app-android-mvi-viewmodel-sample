@@ -14,15 +14,18 @@ internal class ProductDetailUseCaseTest {
     fun shouldGetProductDetail() {
         whenever(productDetailRepository.getProductDetails())
                 .thenReturn(Observable.just(RepositoryState.GetProductDetail.InFlight,
-                                            RepositoryState.GetProductDetail.Success(PRODUCT_DETAIL)))
+                                            RepositoryState.GetProductDetail.Success(productDetailEntity)))
 
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
-        val testObserver = productDetailUseCase.getProductDetail().test()
+        val testObserver =
+                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail).test()
 
         verify(productDetailRepository).getProductDetails()
-        testObserver.assertValues(ProductDetailState.GetProductDetail.InFlight,
-                                  ProductDetailState.GetProductDetail.Success(PRODUCT_DETAIL))
+        testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
+                                  ProductDetailResult.GetProductDetail.Success(productDetailEntity.name,
+                                                                               productDetailEntity.description,
+                                                                               productDetailEntity.price))
         testObserver.assertComplete()
     }
 
@@ -34,48 +37,54 @@ internal class ProductDetailUseCaseTest {
 
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
-        val testObserver = productDetailUseCase.getProductDetail().test()
+        val testObserver =
+                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail).test()
 
         verify(productDetailRepository).getProductDetails()
-        testObserver.assertValues(ProductDetailState.GetProductDetail.InFlight,
-                                  ProductDetailState.GetProductDetail.Error(throwable))
+        testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
+                                  ProductDetailResult.GetProductDetail.Error(throwable))
         testObserver.assertComplete()
     }
 
     @Test
     fun shouldAddProductToBasket() {
-        whenever(productDetailRepository.addProductToBasket(PRODUCT_DETAIL))
+        whenever(productDetailRepository.addProductToBasket(addProductRequest))
                 .thenReturn(Observable.just(RepositoryState.AddProduct.InFlight,
                                             RepositoryState.AddProduct.Success))
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
-        val testObserver = productDetailUseCase.addProductToBasket(PRODUCT_DETAIL).test()
+        val testObserver = productDetailUseCase
+                .resultFrom(ProductDetailAction.AddProductToBasket(productId, quantity)).test()
 
-        verify(productDetailRepository).addProductToBasket(PRODUCT_DETAIL)
-        testObserver.assertValues(ProductDetailState.AddProduct.InFlight,
-                                  ProductDetailState.AddProduct.Success)
+        verify(productDetailRepository).addProductToBasket(addProductRequest)
+        testObserver.assertValues(ProductDetailResult.AddProduct.InFlight,
+                                  ProductDetailResult.AddProduct.Success)
         testObserver.assertComplete()
     }
 
     @Test
     fun shouldReturnError_whenAddProductToBasketFails() {
-        whenever(productDetailRepository.addProductToBasket(PRODUCT_DETAIL))
+        whenever(productDetailRepository.addProductToBasket(addProductRequest))
                 .thenReturn(Observable.just(RepositoryState.AddProduct.InFlight,
                                             RepositoryState.AddProduct.Error(throwable)))
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
-        val testObserver = productDetailUseCase.addProductToBasket(PRODUCT_DETAIL).test()
+        val testObserver = productDetailUseCase
+                .resultFrom(ProductDetailAction.AddProductToBasket(productId, quantity)).test()
 
-        verify(productDetailRepository).addProductToBasket(PRODUCT_DETAIL)
-        testObserver.assertValues(ProductDetailState.AddProduct.InFlight,
-                                  ProductDetailState.AddProduct.Error(throwable))
+        verify(productDetailRepository).addProductToBasket(addProductRequest)
+        testObserver.assertValues(ProductDetailResult.AddProduct.InFlight,
+                                  ProductDetailResult.AddProduct.Error(throwable))
         testObserver.assertComplete()
     }
 
     companion object {
-        val PRODUCT_DETAIL = ProductDetailEntity(name = "name",
-                                                 description = "description",
-                                                 price = 199)
+        val productDetailEntity = ProductDetailEntity(name = "name",
+                                                      description = "description",
+                                                      price = 199)
         val throwable = Throwable()
+        val productId = "1234FKF"
+        val quantity = 1
+        val addProductRequest = AddProductRequest(productId, quantity)
     }
 }

@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-abstract class BaseViewModel<I : BaseIntent, A : BaseAction, VS : BaseViewState, R : BaseResult>(private val baseUseCase: BaseUseCase<A, R>) :
+abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS : BaseViewState>(private val baseUseCase: BaseUseCase<A, R>) :
         ViewModel() {
 
     private val intentSubject = PublishSubject.create<I>()
@@ -26,7 +26,7 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, VS : BaseViewState,
         return BehaviorSubject.create<VS>().apply {
             intentSubject
                     .map { actionFrom(it) }
-                    .map { baseUseCase.resultFrom(it) }
+                    .flatMap { baseUseCase.resultFrom(it) }
                     .scan(initialViewState()) { previousViewState, result ->
                         reduce(previousViewState, result)
                     }
@@ -35,9 +35,9 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, VS : BaseViewState,
         }
     }
 
-    abstract fun initialViewState(): VS
-    abstract fun actionFrom(intent: I): A
-    abstract fun reduce(previousViewState: VS, result: R): VS
+    protected abstract fun initialViewState(): VS
+    protected abstract fun actionFrom(intent: I): A
+    protected abstract fun reduce(previousViewState: VS, result: R): VS
 }
 
 interface BaseViewState

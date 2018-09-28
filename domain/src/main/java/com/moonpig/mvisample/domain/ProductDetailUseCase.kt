@@ -1,25 +1,39 @@
 package com.moonpig.mvisample.domain
 
+import com.moonpig.mvisample.domain.mvibase.BaseAction
+import com.moonpig.mvisample.domain.mvibase.BaseResult
+import com.moonpig.mvisample.domain.mvibase.BaseUseCase
 import io.reactivex.Observable
 
-class ProductDetailUseCase(private val productDetailRepository: ProductDetailRepository) {
-    fun getProductDetail(): Observable<ProductDetailState> =
+class ProductDetailUseCase(private val productDetailRepository: ProductDetailRepository) :
+        BaseUseCase<ProductDetailAction, ProductDetailResult> {
+
+    override fun resultFrom(action: ProductDetailAction): Observable<ProductDetailResult> {
+        return when (action) {
+            is ProductDetailAction.LoadProductDetail -> getProductDetail()
+            is ProductDetailAction.AddProductToBasket -> addProductToBasket(action.productId, action.quantity)
+        }
+    }
+
+    private fun getProductDetail(): Observable<ProductDetailResult> =
             productDetailRepository.getProductDetails()
                     .map {
                         when (it) {
-                            is RepositoryState.GetProductDetail.InFlight -> ProductDetailState.GetProductDetail.InFlight
-                            is RepositoryState.GetProductDetail.Success -> ProductDetailState.GetProductDetail.Success(it.productDetailEntity)
-                            is RepositoryState.GetProductDetail.Error -> ProductDetailState.GetProductDetail.Error(it.throwable)
+                            is RepositoryState.GetProductDetail.InFlight -> ProductDetailResult.GetProductDetail.InFlight
+                            is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(name = it.productDetailEntity.name,
+                                                                                                                        description = it.productDetailEntity.description,
+                                                                                                                        price = it.productDetailEntity.price)
+                            is RepositoryState.GetProductDetail.Error -> ProductDetailResult.GetProductDetail.Error(it.throwable)
                         }
                     }
 
-    fun addProductToBasket(productDetailEntity: ProductDetailEntity): Observable<ProductDetailState.AddProduct> =
-            productDetailRepository.addProductToBasket(productDetailEntity)
+    private fun addProductToBasket(productId: String, quantity: Int): Observable<ProductDetailResult> =
+            productDetailRepository.addProductToBasket(AddProductRequest(productId, quantity))
                     .map {
                         when (it) {
-                            is RepositoryState.AddProduct.InFlight -> ProductDetailState.AddProduct.InFlight
-                            is RepositoryState.AddProduct.Success -> ProductDetailState.AddProduct.Success
-                            is RepositoryState.AddProduct.Error -> ProductDetailState.AddProduct.Error(it.throwable)
+                            is RepositoryState.AddProduct.InFlight -> ProductDetailResult.AddProduct.InFlight
+                            is RepositoryState.AddProduct.Success -> ProductDetailResult.AddProduct.Success
+                            is RepositoryState.AddProduct.Error -> ProductDetailResult.AddProduct.Error(it.throwable)
                         }
                     }
 }
@@ -30,7 +44,7 @@ data class ProductDetailEntity(val name: String,
 
 interface ProductDetailRepository {
     fun getProductDetails(): Observable<RepositoryState.GetProductDetail>
-    fun addProductToBasket(productDetailEntity: ProductDetailEntity): Observable<RepositoryState.AddProduct>
+    fun addProductToBasket(addProductRequest: AddProductRequest): Observable<RepositoryState.AddProduct>
 }
 
 sealed class RepositoryState {
@@ -46,17 +60,24 @@ sealed class RepositoryState {
         data class Error(val throwable: Throwable) : AddProduct()
     }
 }
-
-sealed class ProductDetailState {
-    sealed class GetProductDetail : ProductDetailState() {
+sealed class ProductDetailResult : BaseResult {
+    sealed class GetProductDetail : ProductDetailResult() {
         object InFlight : GetProductDetail()
-        data class Success(val productDetailEntity: ProductDetailEntity) : GetProductDetail()
+        data class Success(val name: String, val description: String, val price: Int) :
+                GetProductDetail()
         data class Error(val throwable: Throwable) : GetProductDetail()
     }
 
-    sealed class AddProduct : ProductDetailState() {
+    sealed class AddProduct : ProductDetailResult() {
         object InFlight : AddProduct()
         object Success : AddProduct()
         data class Error(val throwable: Throwable) : AddProduct()
     }
 }
+
+sealed class ProductDetailAction : BaseAction {
+    object LoadProductDetail : ProductDetailAction()
+    data class AddProductToBasket(val productId: String, val quantity: Int) : ProductDetailAction()
+}
+
+data class AddProductRequest(val productId: String, val quantity: Int)

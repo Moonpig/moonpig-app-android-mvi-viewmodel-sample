@@ -53,15 +53,15 @@ internal class BaseViewModelTest {
 }
 
 class TestUseCase : BaseUseCase<TestAction, TestResult> {
-    override fun resultFrom(action: TestAction): TestResult =
+    override fun resultFrom(action: TestAction): Observable<TestResult> =
             when (action) {
-                TestAction.First -> TestResult.First
-                TestAction.Second -> TestResult.Second
+                TestAction.First -> Observable.just(TestResult.First)
+                TestAction.Second -> Observable.just(TestResult.Second)
             }
 }
 
 class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>) :
-        BaseViewModel<TestIntent, TestAction, TestViewState, TestResult>(testUseCase) {
+        BaseViewModel<TestIntent, TestAction, TestResult, TestViewState>(testUseCase) {
 
     override fun actionFrom(intent: TestIntent): TestAction =
             when (intent) {
