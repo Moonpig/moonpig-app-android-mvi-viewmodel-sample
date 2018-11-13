@@ -2,13 +2,15 @@ package com.moonpig.mvisample.productdetail
 
 import com.moonpig.mvisample.domain.ProductDetailAction
 import com.moonpig.mvisample.domain.ProductDetailResult
-import com.moonpig.mvisample.domain.mvibase.BaseUseCase
+import com.moonpig.mvisample.domain.ProductDetailUseCase
 import com.moonpig.mvisample.mvibase.BaseIntent
 import com.moonpig.mvisample.mvibase.BaseViewModel
 import com.moonpig.mvisample.mvibase.BaseViewState
 
-class ProductDetailViewModel(baseUseCase: BaseUseCase<ProductDetailAction, ProductDetailResult>) :
-        BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailViewState>(baseUseCase) {
+class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
+                             productDetailTracker: ProductDetailTracker) :
+        BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailViewState>(productDetailUseCase,
+                                                                                                             productDetailTracker) {
 
     override fun initialViewState(): ProductDetailViewState = ProductDetailViewState()
 

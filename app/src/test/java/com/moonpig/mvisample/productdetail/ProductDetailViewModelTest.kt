@@ -12,6 +12,7 @@ import org.junit.Test
 class ProductDetailViewModelTest {
 
     private val productDetailUseCase: ProductDetailUseCase = mock()
+    private val productDetailTracker: ProductDetailTracker = mock()
 
     @Test
     fun shouldEmitInFlightState_whenGetProductInFlight() {
@@ -101,5 +102,5 @@ class ProductDetailViewModelTest {
         assertThat(testObserver.values()[1].addToBasketInFlight).isFalse()
     }
 
-    private fun givenAProductDetailViewModel() = ProductDetailViewModel(productDetailUseCase)
+    private fun givenAProductDetailViewModel() = ProductDetailViewModel(productDetailUseCase, productDetailTracker)
 }

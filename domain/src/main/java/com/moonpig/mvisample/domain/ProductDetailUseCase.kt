@@ -60,11 +60,13 @@ sealed class RepositoryState {
         data class Error(val throwable: Throwable) : AddProduct()
     }
 }
+
 sealed class ProductDetailResult : BaseResult {
     sealed class GetProductDetail : ProductDetailResult() {
         object InFlight : GetProductDetail()
         data class Success(val name: String, val description: String, val price: Int) :
                 GetProductDetail()
+
         data class Error(val throwable: Throwable) : GetProductDetail()
     }
 

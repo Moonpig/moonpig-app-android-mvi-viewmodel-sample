@@ -3,16 +3,21 @@ package com.moonpig.mvisample.mvibase
 import com.moonpig.mvisample.domain.mvibase.BaseAction
 import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 internal class BaseViewModelTest {
 
+    private val testUseCase: BaseUseCase<TestAction, TestResult> = mock()
+    private val testTracker: BaseTracker<TestViewState, TestIntent> = mock()
+
     @Test
     fun shouldBindInitialIntentAndReturnInitialViewState() {
-        val testUseCase = TestUseCase()
-        val testViewModel = TestViewModel(testUseCase)
+        val testViewModel = givenATestViewModel()
 
         val testObserver = testViewModel.viewState().test()
         testViewModel.bindIntents(Observable.just(TestIntent.First))
@@ -24,8 +29,7 @@ internal class BaseViewModelTest {
 
     @Test
     fun shouldNotEmitMultipleViewStates_whenNoChanges() {
-        val testUseCase = TestUseCase()
-        val testViewModel = TestViewModel(testUseCase)
+        val testViewModel = givenATestViewModel()
 
         val testObserver = testViewModel.viewState().test()
         testViewModel.bindIntents(Observable.merge(Observable.just(TestIntent.First), Observable.just(TestIntent.First)))
@@ -38,8 +42,7 @@ internal class BaseViewModelTest {
 
     @Test
     fun shouldEmitMultipleViewState_whenChanges() {
-        val testUseCase = TestUseCase()
-        val testViewModel = TestViewModel(testUseCase)
+        val testViewModel = givenATestViewModel()
 
         val testObserver = testViewModel.viewState().test()
         testViewModel.bindIntents(Observable.merge(Observable.just(TestIntent.First), Observable.just(TestIntent.Second)))
@@ -50,18 +53,37 @@ internal class BaseViewModelTest {
         assertThat(testObserver.values()[1]).isEqualTo(TestViewState.First)
         assertThat(testObserver.values()[2]).isEqualTo(TestViewState.Second)
     }
+
+    @Test
+    fun shouldTrackViewState_whenReduced() {
+        val testViewModel = givenATestViewModel()
+
+        testViewModel.viewState().test()
+        testViewModel.bindIntents(Observable.just(TestIntent.First))
+
+        verify(testTracker).trackViewState(TestViewState.First)
+    }
+
+    @Test
+    fun shouldTrackIntent_whenEmitted() {
+        val testViewModel = givenATestViewModel()
+
+        testViewModel.viewState().test()
+        testViewModel.bindIntents(Observable.just(TestIntent.First))
+
+        verify(testTracker).trackIntent(TestIntent.First)
+    }
+
+    private fun givenATestViewModel(): TestViewModel {
+        whenever(testUseCase.resultFrom(TestAction.First)).thenReturn(Observable.just(TestResult.First))
+        whenever(testUseCase.resultFrom(TestAction.Second)).thenReturn(Observable.just(TestResult.Second))
+        return TestViewModel(testUseCase, testTracker)
+    }
 }
 
-class TestUseCase : BaseUseCase<TestAction, TestResult> {
-    override fun resultFrom(action: TestAction): Observable<TestResult> =
-            when (action) {
-                TestAction.First -> Observable.just(TestResult.First)
-                TestAction.Second -> Observable.just(TestResult.Second)
-            }
-}
-
-class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>) :
-        BaseViewModel<TestIntent, TestAction, TestResult, TestViewState>(testUseCase) {
+class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>,
+                    testTracker: BaseTracker<TestViewState, TestIntent>) :
+        BaseViewModel<TestIntent, TestAction, TestResult, TestViewState>(testUseCase, testTracker) {
 
     override fun actionFrom(intent: TestIntent): TestAction =
             when (intent) {
