@@ -15,6 +15,20 @@ class ProductDetailViewModelTest {
     private val productDetailTracker: ProductDetailTracker = mock()
 
     @Test
+    fun shouldEmitInitialIntentOnce() {
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.Success))
+
+        val viewModel = givenAProductDetailViewModel()
+        val testObserver = viewModel.viewState().test()
+        viewModel.bindIntents(Observable.merge(Observable.just(ProductDetailIntent.Initial),
+                                               Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)),
+                                               Observable.just(ProductDetailIntent.Initial)))
+
+        assertThat(testObserver.valueCount()).isEqualTo(2)
+    }
+
+    @Test
     fun shouldEmitInFlightState_whenGetProductInFlight() {
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
         val viewModel = givenAProductDetailViewModel()
@@ -25,22 +39,18 @@ class ProductDetailViewModelTest {
         assertThat(testObserver.values()[1].getProductDetailInFlight).isTrue()
     }
 
-    private val description = "description"
-    private val name = "name"
-    private val price = 199
-
     @Test
     fun shouldEmitSuccessState_whenGetProductSuccess() {
-        val productDetail = ProductDetailResult.GetProductDetail.Success(name, description, price)
+        val productDetail = ProductDetailResult.GetProductDetail.Success(NAME, DESCRIPTION, PRICE)
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(productDetail))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
-        assertThat(testObserver.values()[1].productDetail.name).isEqualTo(name)
-        assertThat(testObserver.values()[1].productDetail.description).isEqualTo(description)
-        assertThat(testObserver.values()[1].productDetail.price).isEqualTo(price)
+        assertThat(testObserver.values()[1].productDetail.name).isEqualTo(NAME)
+        assertThat(testObserver.values()[1].productDetail.description).isEqualTo(DESCRIPTION)
+        assertThat(testObserver.values()[1].productDetail.price).isEqualTo(PRICE)
         assertThat(testObserver.values()[1].getProductDetailInFlight).isFalse()
     }
 
@@ -60,12 +70,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitInFlightState_whenAddProductInFlight() {
-        val productId = "122fkjkjfd"
-        val quantity = 1
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(productId, quantity))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(productId, quantity)))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
         assertThat(testObserver.values()[0].addToBasketInFlight).isFalse()
         assertThat(testObserver.values()[1].addToBasketInFlight).isTrue()
@@ -73,12 +81,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitSuccessState_whenAddProductSuccess() {
-        val productId = "122fkjkjfd"
-        val quantity = 1
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(productId, quantity))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight, ProductDetailResult.AddProduct.Success))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight, ProductDetailResult.AddProduct.Success))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(productId, quantity)))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
         assertThat(testObserver.values()[0].addToBasketInFlight).isFalse()
         assertThat(testObserver.values()[1].addToBasketInFlight).isTrue()
@@ -87,15 +93,13 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitErrorState_whenAddProductError() {
-        val productId = "122fkjkjfd"
-        val quantity = 1
         val exception = RuntimeException()
         val error = ProductDetailResult.AddProduct.Error(exception)
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(productId, quantity))).thenReturn(Observable.just(error))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(error))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(productId, quantity)))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
         assertThat(testObserver.values()[0].addToBasketError).isNull()
         assertThat(testObserver.values()[1].addToBasketError).isEqualTo(exception)
@@ -103,4 +107,12 @@ class ProductDetailViewModelTest {
     }
 
     private fun givenAProductDetailViewModel() = ProductDetailViewModel(productDetailUseCase, productDetailTracker)
+
+    companion object {
+        const val PRODUCT_ID = "122fkjkjfd"
+        const val QUANTITY = 1
+        const val DESCRIPTION = "description"
+        const val NAME = "name"
+        const val PRICE = 199
+    }
 }

@@ -5,6 +5,7 @@ import com.moonpig.mvisample.domain.mvibase.BaseAction
 import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
@@ -26,6 +27,7 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS 
     private fun compose(): Observable<VS> {
         return BehaviorSubject.create<VS>().apply {
             intentSubject
+                    .compose(intentFilter())
                     .doOnNext { tracker.trackIntent(it) }
                     .map { actionFrom(it) }
                     .flatMap { baseUseCase.resultFrom(it) }
@@ -38,6 +40,7 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS 
         }
     }
 
+    protected abstract fun intentFilter(): ObservableTransformer<I, I>
     protected abstract fun initialViewState(): VS
     protected abstract fun actionFrom(intent: I): A
     protected abstract fun reduce(previousViewState: VS, result: R): VS
