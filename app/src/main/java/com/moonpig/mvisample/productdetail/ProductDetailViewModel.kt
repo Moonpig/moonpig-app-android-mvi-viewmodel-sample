@@ -6,11 +6,21 @@ import com.moonpig.mvisample.domain.ProductDetailUseCase
 import com.moonpig.mvisample.mvibase.BaseIntent
 import com.moonpig.mvisample.mvibase.BaseViewModel
 import com.moonpig.mvisample.mvibase.BaseViewState
+import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 
 class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                              productDetailTracker: ProductDetailTracker) :
         BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailViewState>(productDetailUseCase,
                                                                                                              productDetailTracker) {
+
+    override fun intentFilter(): ObservableTransformer<ProductDetailIntent, ProductDetailIntent> =
+            ObservableTransformer { observable ->
+                observable.publish {
+                    Observable.merge(it.ofType(ProductDetailIntent.Initial::class.java).take(1),
+                                     it.filter { intent -> intent !is ProductDetailIntent.Initial })
+                }
+            }
 
     override fun initialViewState(): ProductDetailViewState = ProductDetailViewState()
 

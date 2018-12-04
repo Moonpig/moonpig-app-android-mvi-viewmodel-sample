@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -23,8 +24,25 @@ internal class BaseViewModelTest {
         testViewModel.bindIntents(Observable.just(TestIntent.First))
 
         assertThat(testObserver.hasSubscription()).isTrue()
+        assertThat(testObserver.valueCount()).isEqualTo(2)
         assertThat(testObserver.values()[0]).isEqualTo(TestViewState.Idle)
         assertThat(testObserver.values()[1]).isEqualTo(TestViewState.First)
+    }
+
+    @Test
+    fun shouldNotEmitFirstIntentMoreThanOnce() {
+        val testViewModel = givenATestViewModel()
+
+        val testObserver = testViewModel.viewState().test()
+        testViewModel.bindIntents(Observable.merge(Observable.just(TestIntent.First),
+                                                   Observable.just(TestIntent.Second),
+                                                   Observable.just(TestIntent.First)))
+
+        assertThat(testObserver.hasSubscription()).isTrue()
+        assertThat(testObserver.valueCount()).isEqualTo(3)
+        assertThat(testObserver.values()[0]).isEqualTo(TestViewState.Idle)
+        assertThat(testObserver.values()[1]).isEqualTo(TestViewState.First)
+        assertThat(testObserver.values()[2]).isEqualTo(TestViewState.Second)
     }
 
     @Test
@@ -35,7 +53,7 @@ internal class BaseViewModelTest {
         testViewModel.bindIntents(Observable.merge(Observable.just(TestIntent.First), Observable.just(TestIntent.First)))
 
         assertThat(testObserver.hasSubscription()).isTrue()
-        assertThat(testObserver.values().size).isEqualTo(2)
+        assertThat(testObserver.valueCount()).isEqualTo(2)
         assertThat(testObserver.values()[0]).isEqualTo(TestViewState.Idle)
         assertThat(testObserver.values()[1]).isEqualTo(TestViewState.First)
     }
@@ -48,7 +66,7 @@ internal class BaseViewModelTest {
         testViewModel.bindIntents(Observable.merge(Observable.just(TestIntent.First), Observable.just(TestIntent.Second)))
 
         assertThat(testObserver.hasSubscription()).isTrue()
-        assertThat(testObserver.values().size).isEqualTo(3)
+        assertThat(testObserver.valueCount()).isEqualTo(3)
         assertThat(testObserver.values()[0]).isEqualTo(TestViewState.Idle)
         assertThat(testObserver.values()[1]).isEqualTo(TestViewState.First)
         assertThat(testObserver.values()[2]).isEqualTo(TestViewState.Second)
@@ -84,6 +102,14 @@ internal class BaseViewModelTest {
 class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>,
                     testTracker: BaseTracker<TestViewState, TestIntent>) :
         BaseViewModel<TestIntent, TestAction, TestResult, TestViewState>(testUseCase, testTracker) {
+
+    override fun intentFilter(): ObservableTransformer<TestIntent, TestIntent> =
+            ObservableTransformer { observable ->
+                observable.publish {
+                    Observable.merge(it.ofType(TestIntent.First::class.java).take(1),
+                                     it.filter { intent -> intent !is TestIntent.First })
+                }
+            }
 
     override fun actionFrom(intent: TestIntent): TestAction =
             when (intent) {
