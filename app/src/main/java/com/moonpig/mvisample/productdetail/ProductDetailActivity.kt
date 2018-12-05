@@ -2,10 +2,12 @@ package com.moonpig.mvisample.productdetail
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
 import com.moonpig.mvisample.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_product_detail.progressBar
 
 class ProductDetailActivity : Activity(), ProductDetailView {
 
@@ -38,5 +40,9 @@ class ProductDetailActivity : Activity(), ProductDetailView {
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
+    }
+
+    override fun isLoading(visible: Boolean) {
+        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }
