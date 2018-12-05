@@ -28,14 +28,12 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS 
         return BehaviorSubject.create<VS>().apply {
             intentSubject
                     .compose(intentFilter())
-                    .doOnNext { tracker.trackIntent(it) }
-                    .map { actionFrom(it) }
-                    .flatMap { baseUseCase.resultFrom(it) }
-                    .scan(initialViewState()) { previousViewState, result ->
-                        reduce(previousViewState, result)
-                    }
+                    .doOnNext(tracker::trackIntent)
+                    .map(::actionFrom)
+                    .flatMap(baseUseCase::resultFrom)
+                    .scan(initialViewState(), ::reduce)
                     .distinctUntilChanged()
-                    .doOnNext { tracker.trackViewState(it) }
+                    .doOnNext(tracker::trackViewState)
                     .subscribe(this)
         }
     }
