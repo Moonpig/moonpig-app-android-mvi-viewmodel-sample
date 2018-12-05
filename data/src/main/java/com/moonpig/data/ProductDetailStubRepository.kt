@@ -8,8 +8,10 @@ import io.reactivex.Observable
 
 class ProductDetailStubRepository : ProductDetailRepository {
     override fun getProductDetails(): Observable<RepositoryState.GetProductDetail> =
-            Observable.just(RepositoryState.GetProductDetail.InFlight,
-                            RepositoryState.GetProductDetail.Success(ProductDetailEntity("Advanced cat fighting gift set", "Everything your kitty needs to seriously up it's fighting game! Accessories including the pictured mace not included.", 299)))
+            Observable.just(
+                    RepositoryState.GetProductDetail.InFlight,
+                    RepositoryState.GetProductDetail.Success(ProductDetailEntity("Advanced cat fighting gift set", "Everything your kitty needs to seriously up it's fighting game! Accessories including the pictured mace not included.", 299))
+            )
 
     override fun addProductToBasket(addProductRequest: AddProductRequest): Observable<RepositoryState.AddProduct> =
             Observable.just(RepositoryState.AddProduct.InFlight,

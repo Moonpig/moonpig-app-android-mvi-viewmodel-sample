@@ -4,7 +4,7 @@
     package="com.moonpig.mvisample">
 
     <application
-        android:allowBackup="true"
+        android:name=".MVIExampleApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
