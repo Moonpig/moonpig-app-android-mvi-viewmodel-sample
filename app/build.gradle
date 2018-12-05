@@ -29,7 +29,8 @@ androidExtensions {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':domain')
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation project(':data')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation "android.arch.lifecycle:viewmodel:$lifecycle_version" // use -ktx for Kotlin
@@ -39,6 +40,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxBindingVersion}"
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation "junit:junit:$junitCoreVersion"
     testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
     testImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
