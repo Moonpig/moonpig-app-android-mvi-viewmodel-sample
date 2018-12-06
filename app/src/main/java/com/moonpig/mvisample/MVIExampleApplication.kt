@@ -4,7 +4,7 @@ import android.app.Application
 import com.moonpig.mvisample.di.ApplicationComponent
 import com.moonpig.mvisample.di.DaggerApplicationComponent
 
-class MVIExampleApplication : Application() {
+open class MVIExampleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -12,7 +12,7 @@ class MVIExampleApplication : Application() {
     }
 
     private lateinit var _applicationComponent: ApplicationComponent
-    val applicationComponent
+    open val applicationComponent
         get() = _applicationComponent
 
     private fun initialiseDagger() {

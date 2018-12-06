@@ -6,7 +6,7 @@ import dagger.Subcomponent
 
 @PerActivity
 @Subcomponent(modules = [
-    ProductDetailsDataModule::class
+    ProductDetailsModule::class
 ])
 interface ProductDetailsComponent {
 

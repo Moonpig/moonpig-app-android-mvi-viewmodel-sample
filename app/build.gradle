@@ -11,7 +11,8 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner 'com.moonpig.mvisample.screentests.MVISampleTestRunner'
     }
     buildTypes {
         release {
@@ -50,5 +51,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
+    androidTestImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
 }

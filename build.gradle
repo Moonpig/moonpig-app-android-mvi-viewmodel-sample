@@ -36,4 +36,5 @@ ext {
     assertjCoreVersion = '3.10.0'
     mockitoKotlinVersion = '1.5.0'
     daggerVersion = "2.16"
+    mockitoAndroidVersion = '2.18.3'
 }

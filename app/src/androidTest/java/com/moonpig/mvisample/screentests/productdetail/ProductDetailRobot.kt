@@ -9,6 +9,10 @@ import org.hamcrest.CoreMatchers.not
 
 class ProductDetailRobot {
     fun isLoading() {
+        onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
+    }
+
+    fun isNotLoading() {
         onView(withId(R.id.progressBar)).check(matches(not(isDisplayed())))
     }
 }

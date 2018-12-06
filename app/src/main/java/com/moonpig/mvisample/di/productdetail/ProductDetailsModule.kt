@@ -1,6 +1,5 @@
 package com.moonpig.mvisample.di.productdetail
 
-import com.moonpig.data.ProductDetailStubRepository
 import com.moonpig.mvisample.domain.ProductDetailRepository
 import com.moonpig.mvisample.domain.ProductDetailUseCase
 import com.moonpig.mvisample.productdetail.ProductDetailTracker
@@ -9,11 +8,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class ProductDetailsDataModule {
-
-    @Provides
-    fun provideProductDetailsRepository(): ProductDetailRepository =
-            ProductDetailStubRepository()
+class ProductDetailsModule {
 
     @Provides
     fun provideProductDetailsUseCase(productDetailsRepository: ProductDetailRepository) =
