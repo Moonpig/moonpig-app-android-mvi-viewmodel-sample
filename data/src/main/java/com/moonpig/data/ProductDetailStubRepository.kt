@@ -14,7 +14,9 @@ class ProductDetailStubRepository : ProductDetailRepository {
                             ProductDetailEntity(
                                     "Advanced cat fighting gift set",
                                     "Everything your kitty needs to seriously up it's fighting game! Accessories including the pictured mace not included.",
-                                    299)
+                                    299,
+                                    "https://d1xkhapf8f3lxw.cloudfront.net/uk/globalassets/gadgets-novelty/update-2/for-him_276x276.jpg?version=4a8967"
+                            )
                     )
             )
 

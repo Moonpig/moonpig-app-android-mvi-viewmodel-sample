@@ -31,10 +31,11 @@ ext {
     rxJavaVersion = '2.1.17'
     rxAndroidVersion = '2.0.2'
     rxBindingVersion = '2.1.1'
+    picassoVersion = '2.71828'
+    daggerVersion = "2.16"
 
     junitCoreVersion = '4.12'
     assertjCoreVersion = '3.10.0'
     mockitoKotlinVersion = '1.5.0'
-    daggerVersion = "2.16"
     mockitoAndroidVersion = '2.18.3'
 }

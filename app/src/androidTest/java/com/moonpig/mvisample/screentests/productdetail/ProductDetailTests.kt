@@ -44,12 +44,33 @@ class ProductDetailTests {
                         RepositoryState.GetProductDetail.Success(ProductDetailEntity(
                                 "name",
                                 "desc",
-                                0)
+                                0,
+                                "")
                         ))
                 )
         givenAProductDetailActivity()
 
         ProductDetailRobot()
                 .isNotLoading()
+    }
+
+    @Test
+    fun shouldShowProductDetails_whenFetchingSucceeds() {
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
+                .willReturn(Observable.just(
+                        RepositoryState.GetProductDetail.InFlight,
+                        RepositoryState.GetProductDetail.Success(ProductDetailEntity(
+                                "name",
+                                "desc",
+                                0,
+                                "")
+                        ))
+                )
+        givenAProductDetailActivity()
+
+        ProductDetailRobot()
+                .nameDisplayed("name")
+                .descriptionDisplayed("desc")
+                .priceDisplayed("£0")
     }
 }

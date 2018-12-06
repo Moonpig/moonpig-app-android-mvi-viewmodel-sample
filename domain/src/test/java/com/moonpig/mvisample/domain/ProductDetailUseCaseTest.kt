@@ -25,7 +25,8 @@ internal class ProductDetailUseCaseTest {
         testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
                                   ProductDetailResult.GetProductDetail.Success(productDetailEntity.name,
                                                                                productDetailEntity.description,
-                                                                               productDetailEntity.price))
+                                                                               productDetailEntity.price,
+                                                                               productDetailEntity.imageUrl))
         testObserver.assertComplete()
     }
 
@@ -81,7 +82,8 @@ internal class ProductDetailUseCaseTest {
     companion object {
         val productDetailEntity = ProductDetailEntity(name = "name",
                                                       description = "description",
-                                                      price = 199)
+                                                      price = 199,
+                                                      imageUrl = "imageUrl")
         val throwable = Throwable()
         val productId = "1234FKF"
         val quantity = 1

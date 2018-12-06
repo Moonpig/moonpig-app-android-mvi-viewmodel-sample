@@ -36,7 +36,8 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                 is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(getProductDetailInFlight = false,
                                                                                           productDetail = ProductDetail(name = result.name,
                                                                                                                         description = result.description,
-                                                                                                                        price = result.price))
+                                                                                                                        price = result.price,
+                                                                                                                        imageUrl = result.imageUrl))
                 is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(getProductDetailInFlight = false,
                                                                                         getProductDetailError = result.throwable)
 
@@ -54,11 +55,17 @@ sealed class ProductDetailIntent : BaseIntent {
 
 data class ProductDetailViewState(val getProductDetailInFlight: Boolean = false,
                                   val getProductDetailError: Throwable? = null,
-                                  val productDetail: ProductDetail = ProductDetail(),
+                                  val productDetail: ProductDetail = ProductDetail.None,
                                   val addToBasketInFlight: Boolean = false,
                                   val addToBasketError: Throwable? = null) :
         BaseViewState
 
 data class ProductDetail(val name: String = "",
                          val description: String = "",
-                         val price: Int = 0)
+                         val price: Int = 0,
+                         val imageUrl: String = ""){
+    companion object {
+        val None = ProductDetail()
+    }
+}
+

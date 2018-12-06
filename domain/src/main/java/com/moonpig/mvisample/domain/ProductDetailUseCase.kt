@@ -22,7 +22,8 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
                             is RepositoryState.GetProductDetail.InFlight -> ProductDetailResult.GetProductDetail.InFlight
                             is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(name = it.productDetailEntity.name,
                                                                                                                         description = it.productDetailEntity.description,
-                                                                                                                        price = it.productDetailEntity.price)
+                                                                                                                        price = it.productDetailEntity.price,
+                                                                                                                        imageUrl = it.productDetailEntity.imageUrl)
                             is RepositoryState.GetProductDetail.Error -> ProductDetailResult.GetProductDetail.Error(it.throwable)
                         }
                     }
@@ -40,7 +41,8 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
 
 data class ProductDetailEntity(val name: String,
                                val description: String,
-                               val price: Int)
+                               val price: Int,
+                               val imageUrl: String)
 
 interface ProductDetailRepository {
     fun getProductDetails(): Observable<RepositoryState.GetProductDetail>
@@ -64,7 +66,7 @@ sealed class RepositoryState {
 sealed class ProductDetailResult : BaseResult {
     sealed class GetProductDetail : ProductDetailResult() {
         object InFlight : GetProductDetail()
-        data class Success(val name: String, val description: String, val price: Int) :
+        data class Success(val name: String, val description: String, val price: Int, val imageUrl: String) :
                 GetProductDetail()
 
         data class Error(val throwable: Throwable) : GetProductDetail()

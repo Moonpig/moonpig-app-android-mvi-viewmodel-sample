@@ -29,6 +29,15 @@ class ProductDetailViewModelTest {
     }
 
     @Test
+    fun shouldEmitNullObjectProductDetail_whenInitialised() {
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
+        val viewModel = givenAProductDetailViewModel()
+        val testObserver = viewModel.viewState().test()
+
+        assertThat(testObserver.values()[0].productDetail).isSameAs(ProductDetail.None)
+    }
+
+    @Test
     fun shouldEmitInFlightState_whenGetProductInFlight() {
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
         val viewModel = givenAProductDetailViewModel()
@@ -41,17 +50,19 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitSuccessState_whenGetProductSuccess() {
-        val productDetail = ProductDetailResult.GetProductDetail.Success(NAME, DESCRIPTION, PRICE)
+        val productDetail = ProductDetailResult.GetProductDetail.Success(NAME, DESCRIPTION, PRICE, IMAGE_URL)
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(productDetail))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
-        assertThat(testObserver.values()[1].productDetail.name).isEqualTo(NAME)
-        assertThat(testObserver.values()[1].productDetail.description).isEqualTo(DESCRIPTION)
-        assertThat(testObserver.values()[1].productDetail.price).isEqualTo(PRICE)
-        assertThat(testObserver.values()[1].getProductDetailInFlight).isFalse()
+        val viewState = testObserver.values()[1]
+        assertThat(viewState.productDetail.name).isEqualTo(NAME)
+        assertThat(viewState.productDetail.description).isEqualTo(DESCRIPTION)
+        assertThat(viewState.productDetail.price).isEqualTo(PRICE)
+        assertThat(viewState.productDetail.imageUrl).isEqualTo(IMAGE_URL)
+        assertThat(viewState.getProductDetailInFlight).isFalse()
     }
 
     @Test
@@ -114,5 +125,6 @@ class ProductDetailViewModelTest {
         const val DESCRIPTION = "description"
         const val NAME = "name"
         const val PRICE = 199
+        const val IMAGE_URL = "imageUrl"
     }
 }
