@@ -1,9 +1,12 @@
 package com.moonpig.mvisample.domain
 
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.moonpig.mvisample.domain.productdetail.AddProductRequest
 import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
+import com.moonpig.mvisample.domain.productdetail.ProductDetailRepository
 import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
 import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
+import com.moonpig.mvisample.domain.productdetail.RepositoryState
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -18,7 +21,7 @@ internal class ProductDetailUseCaseTest {
     fun shouldGetProductDetail() {
         whenever(productDetailRepository.getProductDetails())
                 .thenReturn(Observable.just(RepositoryState.GetProductDetail.InFlight,
-                                            RepositoryState.GetProductDetail.Success(productDetailEntity)))
+                                            RepositoryState.GetProductDetail.Success(productDetail)))
 
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
@@ -27,10 +30,7 @@ internal class ProductDetailUseCaseTest {
 
         verify(productDetailRepository).getProductDetails()
         testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
-                                  ProductDetailResult.GetProductDetail.Success(productDetailEntity.name,
-                                                                               productDetailEntity.description,
-                                                                               productDetailEntity.price,
-                                                                               productDetailEntity.imageUrl))
+                                  ProductDetailResult.GetProductDetail.Success(productDetail))
         testObserver.assertComplete()
     }
 
@@ -84,10 +84,10 @@ internal class ProductDetailUseCaseTest {
     }
 
     companion object {
-        val productDetailEntity = ProductDetailEntity(name = "name",
-                                                      description = "description",
-                                                      price = 199,
-                                                      imageUrl = "imageUrl")
+        val productDetail = ProductDetail(name = "name",
+                                          description = "description",
+                                          price = 199,
+                                          imageUrl = "imageUrl")
         val throwable = Throwable()
         val productId = "1234FKF"
         val quantity = 1
