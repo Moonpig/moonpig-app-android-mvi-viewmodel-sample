@@ -74,9 +74,7 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
     }
 
     override fun displayImage(imageUrl: String) {
-        Picasso.get().isLoggingEnabled = true
-        Picasso.get()
-                .load(imageUrl).into(findViewById<ImageView>(R.id.image))
+        Picasso.get().load(imageUrl).into(image)
     }
 
 }
