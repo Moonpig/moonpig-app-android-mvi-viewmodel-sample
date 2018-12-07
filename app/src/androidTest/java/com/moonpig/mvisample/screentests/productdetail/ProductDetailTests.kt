@@ -45,7 +45,7 @@ class ProductDetailTests {
                                 "name",
                                 "desc",
                                 0,
-                                "")
+                                "imageUrl")
                         ))
                 )
         givenAProductDetailActivity()
@@ -63,7 +63,7 @@ class ProductDetailTests {
                                 "name",
                                 "desc",
                                 0,
-                                "")
+                                "imageUrl")
                         ))
                 )
         givenAProductDetailActivity()
