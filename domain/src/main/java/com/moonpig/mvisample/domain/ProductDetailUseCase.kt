@@ -1,6 +1,6 @@
 package com.moonpig.mvisample.domain
 
-import com.moonpig.mvisample.domain.entities.ProductDetailEntity
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.moonpig.mvisample.domain.mvibase.BaseAction
 import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
@@ -21,10 +21,10 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
                     .map {
                         when (it) {
                             is RepositoryState.GetProductDetail.InFlight -> ProductDetailResult.GetProductDetail.InFlight
-                            is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(name = it.productDetailEntity.name,
-                                                                                                                        description = it.productDetailEntity.description,
-                                                                                                                        price = it.productDetailEntity.price,
-                                                                                                                        imageUrl = it.productDetailEntity.imageUrl)
+                            is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(name = it.productDetail.name,
+                                                                                                                        description = it.productDetail.description,
+                                                                                                                        price = it.productDetail.price,
+                                                                                                                        imageUrl = it.productDetail.imageUrl)
                             is RepositoryState.GetProductDetail.Error -> ProductDetailResult.GetProductDetail.Error(it.throwable)
                         }
                     }
@@ -48,7 +48,7 @@ interface ProductDetailRepository {
 sealed class RepositoryState {
     sealed class GetProductDetail : RepositoryState() {
         object InFlight : GetProductDetail()
-        data class Success(val productDetailEntity: ProductDetailEntity) : GetProductDetail()
+        data class Success(val productDetail: ProductDetail) : GetProductDetail()
         data class Error(val throwable: Throwable) : GetProductDetail()
     }
 

@@ -3,7 +3,7 @@ package com.moonpig.data
 import com.moonpig.mvisample.domain.AddProductRequest
 import com.moonpig.mvisample.domain.ProductDetailRepository
 import com.moonpig.mvisample.domain.RepositoryState
-import com.moonpig.mvisample.domain.entities.ProductDetailEntity
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import io.reactivex.Observable
 
 class ProductDetailStubRepository : ProductDetailRepository {
@@ -11,7 +11,7 @@ class ProductDetailStubRepository : ProductDetailRepository {
             Observable.just(
                     RepositoryState.GetProductDetail.InFlight,
                     RepositoryState.GetProductDetail.Success(
-                            ProductDetailEntity(
+                            ProductDetail(
                                     "Advanced cat fighting gift set",
                                     "Everything your kitty needs to seriously up it's fighting game! Accessories including the pictured mace not included.",
                                     299,

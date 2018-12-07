@@ -1,7 +1,7 @@
 package com.moonpig.mvisample.screentests.productdetail
 
 import android.content.Intent
-import com.moonpig.mvisample.domain.ProductDetailEntity
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.moonpig.mvisample.domain.RepositoryState
 import com.moonpig.mvisample.productdetail.ProductDetailActivity
 import com.moonpig.mvisample.screentests.ScreenTestApplication
@@ -41,7 +41,7 @@ class ProductDetailTests {
         given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
                 .willReturn(Observable.just(
                         RepositoryState.GetProductDetail.InFlight,
-                        RepositoryState.GetProductDetail.Success(ProductDetailEntity(
+                        RepositoryState.GetProductDetail.Success(ProductDetail(
                                 "name",
                                 "desc",
                                 0,
@@ -59,7 +59,7 @@ class ProductDetailTests {
         given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
                 .willReturn(Observable.just(
                         RepositoryState.GetProductDetail.InFlight,
-                        RepositoryState.GetProductDetail.Success(ProductDetailEntity(
+                        RepositoryState.GetProductDetail.Success(ProductDetail(
                                 "name",
                                 "desc",
                                 0,
