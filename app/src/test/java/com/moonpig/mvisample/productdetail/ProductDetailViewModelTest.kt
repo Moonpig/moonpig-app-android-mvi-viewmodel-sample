@@ -3,6 +3,7 @@ package com.moonpig.mvisample.productdetail
 import com.moonpig.mvisample.domain.ProductDetailAction
 import com.moonpig.mvisample.domain.ProductDetailResult
 import com.moonpig.mvisample.domain.ProductDetailUseCase
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -50,7 +51,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitSuccessState_whenGetProductSuccess() {
-        val productDetail = ProductDetailResult.GetProductDetail.Success(NAME, DESCRIPTION, PRICE, IMAGE_URL)
+        val productDetail = ProductDetailResult.GetProductDetail.Success(ProductDetail(NAME, DESCRIPTION, PRICE, IMAGE_URL))
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(productDetail))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()

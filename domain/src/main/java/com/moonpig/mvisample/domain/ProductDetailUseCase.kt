@@ -21,10 +21,7 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
                     .map {
                         when (it) {
                             is RepositoryState.GetProductDetail.InFlight -> ProductDetailResult.GetProductDetail.InFlight
-                            is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(name = it.productDetail.name,
-                                                                                                                        description = it.productDetail.description,
-                                                                                                                        price = it.productDetail.price,
-                                                                                                                        imageUrl = it.productDetail.imageUrl)
+                            is RepositoryState.GetProductDetail.Success -> ProductDetailResult.GetProductDetail.Success(it.productDetail)
                             is RepositoryState.GetProductDetail.Error -> ProductDetailResult.GetProductDetail.Error(it.throwable)
                         }
                     }
@@ -62,8 +59,7 @@ sealed class RepositoryState {
 sealed class ProductDetailResult : BaseResult {
     sealed class GetProductDetail : ProductDetailResult() {
         object InFlight : GetProductDetail()
-        data class Success(val name: String, val description: String, val price: Int, val imageUrl: String) :
-                GetProductDetail()
+        data class Success(val productDetail: ProductDetail) : GetProductDetail()
 
         data class Error(val throwable: Throwable) : GetProductDetail()
     }
