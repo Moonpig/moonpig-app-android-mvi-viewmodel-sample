@@ -1,7 +1,7 @@
 package com.moonpig.mvisample.di.productdetail
 
-import com.moonpig.mvisample.domain.ProductDetailRepository
-import com.moonpig.mvisample.domain.ProductDetailUseCase
+import com.moonpig.mvisample.domain.productdetail.ProductDetailRepository
+import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
 import com.moonpig.mvisample.productdetail.ProductDetailTracker
 import com.moonpig.mvisample.productdetail.ProductDetailViewModelFactory
 import dagger.Module

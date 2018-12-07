@@ -1,6 +1,6 @@
 package com.moonpig.mvisample.screentests.di
 
-import com.moonpig.mvisample.domain.ProductDetailRepository
+import com.moonpig.mvisample.domain.productdetail.ProductDetailRepository
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module

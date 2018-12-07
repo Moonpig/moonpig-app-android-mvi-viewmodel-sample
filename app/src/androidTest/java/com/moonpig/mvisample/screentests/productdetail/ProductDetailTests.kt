@@ -2,7 +2,7 @@ package com.moonpig.mvisample.screentests.productdetail
 
 import android.content.Intent
 import com.moonpig.mvisample.domain.entities.ProductDetail
-import com.moonpig.mvisample.domain.RepositoryState
+import com.moonpig.mvisample.domain.productdetail.RepositoryState
 import com.moonpig.mvisample.productdetail.ProductDetailActivity
 import com.moonpig.mvisample.screentests.ScreenTestApplication
 import com.moonpig.mvisample.screentests.di.DaggerTestApplicationComponent

@@ -1,5 +1,9 @@
 package com.moonpig.mvisample.domain
 
+import com.moonpig.mvisample.domain.productdetail.AddProductRequest
+import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
+import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
+import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever

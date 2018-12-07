@@ -1,8 +1,8 @@
 package com.moonpig.mvisample.productdetail
 
-import com.moonpig.mvisample.domain.ProductDetailAction
-import com.moonpig.mvisample.domain.ProductDetailResult
-import com.moonpig.mvisample.domain.ProductDetailUseCase
+import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
+import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
+import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
 import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
