@@ -1,5 +1,6 @@
 package com.moonpig.mvisample.domain
 
+import com.moonpig.mvisample.domain.entities.ProductDetailEntity
 import com.moonpig.mvisample.domain.mvibase.BaseAction
 import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
@@ -38,11 +39,6 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
                         }
                     }
 }
-
-data class ProductDetailEntity(val name: String,
-                               val description: String,
-                               val price: Int,
-                               val imageUrl: String)
 
 interface ProductDetailRepository {
     fun getProductDetails(): Observable<RepositoryState.GetProductDetail>

@@ -1,9 +1,9 @@
 package com.moonpig.data
 
 import com.moonpig.mvisample.domain.AddProductRequest
-import com.moonpig.mvisample.domain.ProductDetailEntity
 import com.moonpig.mvisample.domain.ProductDetailRepository
 import com.moonpig.mvisample.domain.RepositoryState
+import com.moonpig.mvisample.domain.entities.ProductDetailEntity
 import io.reactivex.Observable
 
 class ProductDetailStubRepository : ProductDetailRepository {
