@@ -4,14 +4,14 @@ class ProductDetailRenderer {
 
     fun render(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         renderLoadingIndicator(view, viewState)
-        renderProductDetail(viewState, view)
+        renderProductDetail(view, viewState)
     }
 
     private fun renderLoadingIndicator(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         view.isLoading(viewState.getProductDetailInFlight)
     }
 
-    private fun renderProductDetail(viewState: ProductDetailScreenViewState, view: ProductDetailView) {
+    private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         if (viewState.productDetail === ProductDetailViewState.None)
             return
 
