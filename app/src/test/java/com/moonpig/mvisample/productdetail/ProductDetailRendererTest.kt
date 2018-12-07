@@ -13,7 +13,7 @@ class ProductDetailRendererTest {
 
     @Test
     fun shouldShowLoading_whenFetchingProductDetails() {
-        val viewState = ProductDetailViewState(getProductDetailInFlight = true)
+        val viewState = ProductDetailScreenViewState(getProductDetailInFlight = true)
 
         productDetailRenderer.render(view, viewState)
 
@@ -22,7 +22,7 @@ class ProductDetailRendererTest {
 
     @Test
     fun shouldHideLoading_whenFetchingProductDetailsFinished() {
-        val viewState = ProductDetailViewState(getProductDetailInFlight = false)
+        val viewState = ProductDetailScreenViewState(getProductDetailInFlight = false)
 
         productDetailRenderer.render(view, viewState)
 
@@ -31,7 +31,7 @@ class ProductDetailRendererTest {
 
     @Test
     fun shouldDisplayProductDetails_whenFetchingSucceeded() {
-        val viewState = ProductDetailViewState(
+        val viewState = ProductDetailScreenViewState(
                 productDetail = ProductDetail(
                         "Name",
                         "Description",
@@ -50,7 +50,7 @@ class ProductDetailRendererTest {
 
     @Test
     fun shouldNotDisplayProductDetails_whenProductDetailIsNone() {
-        val viewState = ProductDetailViewState(
+        val viewState = ProductDetailScreenViewState(
                 productDetail = ProductDetail.None
         )
 

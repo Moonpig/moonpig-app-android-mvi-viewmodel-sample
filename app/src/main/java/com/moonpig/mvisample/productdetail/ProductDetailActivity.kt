@@ -2,7 +2,6 @@ package com.moonpig.mvisample.productdetail
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import com.moonpig.mvisample.MVIExampleApplication
 import com.moonpig.mvisample.R
 import com.moonpig.mvisample.di.productdetail.ProductDetailsComponent
@@ -47,7 +46,7 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
         ))
     }
 
-    private fun renderStateToView(viewState: ProductDetailViewState) =
+    private fun renderStateToView(viewState: ProductDetailScreenViewState) =
             productDetailRenderer.render(this, viewState)
 
     private fun initialIntent() = Observable.just(ProductDetailIntent.Initial)

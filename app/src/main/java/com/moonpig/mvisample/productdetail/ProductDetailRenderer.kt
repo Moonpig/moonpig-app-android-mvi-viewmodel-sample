@@ -2,16 +2,16 @@ package com.moonpig.mvisample.productdetail
 
 class ProductDetailRenderer {
 
-    fun render(view: ProductDetailView, viewState: ProductDetailViewState) {
+    fun render(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         renderLoadingIndicator(view, viewState)
         renderProductDetail(viewState, view)
     }
 
-    private fun renderLoadingIndicator(view: ProductDetailView, viewState: ProductDetailViewState) {
+    private fun renderLoadingIndicator(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         view.isLoading(viewState.getProductDetailInFlight)
     }
 
-    private fun renderProductDetail(viewState: ProductDetailViewState, view: ProductDetailView) {
+    private fun renderProductDetail(viewState: ProductDetailScreenViewState, view: ProductDetailView) {
         if (viewState.productDetail === ProductDetail.None)
             return
 
