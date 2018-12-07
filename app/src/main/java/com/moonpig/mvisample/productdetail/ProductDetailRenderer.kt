@@ -12,7 +12,7 @@ class ProductDetailRenderer {
     }
 
     private fun renderProductDetail(viewState: ProductDetailScreenViewState, view: ProductDetailView) {
-        if (viewState.productDetail === ProductDetail.None)
+        if (viewState.productDetail === ProductDetailViewState.None)
             return
 
         view.displayName(viewState.productDetail.name)

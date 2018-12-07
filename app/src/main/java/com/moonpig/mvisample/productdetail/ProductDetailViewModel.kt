@@ -33,10 +33,10 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
             when (result) {
                 is ProductDetailResult.GetProductDetail.InFlight -> previousViewState.copy(getProductDetailInFlight = true)
                 is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(getProductDetailInFlight = false,
-                                                                                          productDetail = ProductDetail(name = result.name,
-                                                                                                                        description = result.description,
-                                                                                                                        price = result.price,
-                                                                                                                        imageUrl = result.imageUrl))
+                                                                                          productDetail = ProductDetailViewState(name = result.name,
+                                                                                                                                 description = result.description,
+                                                                                                                                 price = result.price,
+                                                                                                                                 imageUrl = result.imageUrl))
                 is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(getProductDetailInFlight = false,
                                                                                         getProductDetailError = result.throwable)
 
@@ -50,14 +50,5 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
 sealed class ProductDetailIntent : BaseIntent {
     object Initial : ProductDetailIntent()
     data class AddToBasket(val productId: String, val quantity: Int) : ProductDetailIntent()
-}
-
-data class ProductDetail(val name: String = "",
-                         val description: String = "",
-                         val price: Int = 0,
-                         val imageUrl: String = ""){
-    companion object {
-        val None = ProductDetail()
-    }
 }
 

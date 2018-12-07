@@ -34,7 +34,7 @@ class ProductDetailViewModelTest {
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
-        assertThat(testObserver.values()[0].productDetail).isSameAs(ProductDetail.None)
+        assertThat(testObserver.values()[0].productDetail).isSameAs(ProductDetailViewState.None)
     }
 
     @Test
