@@ -51,7 +51,7 @@ class ProductDetailRendererTest {
     @Test
     fun shouldNotDisplayProductDetails_whenProductDetailIsNone() {
         val viewState = ProductDetailScreenViewState(
-                productDetail = ProductDetailViewState.None
+                productDetail = null
         )
 
         productDetailRenderer.render(view, viewState)

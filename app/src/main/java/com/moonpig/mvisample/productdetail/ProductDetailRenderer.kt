@@ -12,12 +12,11 @@ class ProductDetailRenderer {
     }
 
     private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
-        if (viewState.productDetail === ProductDetailViewState.None)
-            return
-
-        view.displayName(viewState.productDetail.name)
-        view.displayDescription(viewState.productDetail.description)
-        view.displayPrice("£${viewState.productDetail.price}")
-        view.displayImage(viewState.productDetail.imageUrl)
+        viewState.productDetail?.let {
+            view.displayName(it.name)
+            view.displayDescription(it.description)
+            view.displayPrice("£${it.price}")
+            view.displayImage(it.imageUrl)
+        }
     }
 }

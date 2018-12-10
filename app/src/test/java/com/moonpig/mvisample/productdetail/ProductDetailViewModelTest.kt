@@ -35,7 +35,7 @@ class ProductDetailViewModelTest {
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
-        assertThat(testObserver.values()[0].productDetail).isSameAs(ProductDetailViewState.None)
+        assertThat(testObserver.values()[0].productDetail).isNull()
     }
 
     @Test
@@ -59,10 +59,10 @@ class ProductDetailViewModelTest {
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
         val viewState = testObserver.values()[1]
-        assertThat(viewState.productDetail.name).isEqualTo(NAME)
-        assertThat(viewState.productDetail.description).isEqualTo(DESCRIPTION)
-        assertThat(viewState.productDetail.price).isEqualTo(PRICE)
-        assertThat(viewState.productDetail.imageUrl).isEqualTo(IMAGE_URL)
+        assertThat(viewState.productDetail?.name).isEqualTo(NAME)
+        assertThat(viewState.productDetail?.description).isEqualTo(DESCRIPTION)
+        assertThat(viewState.productDetail?.price).isEqualTo(PRICE)
+        assertThat(viewState.productDetail?.imageUrl).isEqualTo(IMAGE_URL)
         assertThat(viewState.getProductDetailInFlight).isFalse()
     }
 
