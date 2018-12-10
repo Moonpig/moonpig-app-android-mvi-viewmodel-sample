@@ -17,8 +17,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitInitialIntentOnce() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.Success))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
+                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY)))
+                .thenReturn(Observable.just(ProductDetailResult.AddProduct.Success))
 
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
@@ -31,7 +33,8 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitNullObjectProductDetail_whenInitialised() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
+                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
 
@@ -40,7 +43,8 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitInFlightState_whenGetProductInFlight() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
+                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
@@ -82,7 +86,8 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitInFlightState_whenAddProductInFlight() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY)))
+                .thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
         viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
@@ -93,7 +98,8 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitSuccessState_whenAddProductSuccess() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY))).thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight, ProductDetailResult.AddProduct.Success))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY)))
+                .thenReturn(Observable.just(ProductDetailResult.AddProduct.InFlight, ProductDetailResult.AddProduct.Success))
         val viewModel = givenAProductDetailViewModel()
         val testObserver = viewModel.viewState().test()
         viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
