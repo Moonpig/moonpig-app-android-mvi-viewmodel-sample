@@ -16,7 +16,7 @@ class ProductDetailViewModelTest {
     private val productDetailTracker: ProductDetailTracker = mock()
 
     private val viewModel = givenAProductDetailViewModel()
-    private val testObserver = viewModel.viewState().test()
+    private val viewStateObserver = viewModel.viewState().test()
 
     @Test
     fun shouldEmitInitialIntentOnce() {
@@ -29,7 +29,7 @@ class ProductDetailViewModelTest {
                                                Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)),
                                                Observable.just(ProductDetailIntent.Initial)))
 
-        assertThat(testObserver.valueCount()).isEqualTo(2)
+        assertThat(viewStateObserver.valueCount()).isEqualTo(2)
     }
 
     @Test
@@ -37,7 +37,7 @@ class ProductDetailViewModelTest {
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
                 .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
 
-        assertThat(testObserver.values()[0].productDetail).isNull()
+        assertThat(viewStateObserver.values()[0].productDetail).isNull()
     }
 
     @Test
@@ -47,8 +47,8 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
-        assertThat(testObserver.values()[0].getProductDetailInFlight).isFalse()
-        assertThat(testObserver.values()[1].getProductDetailInFlight).isTrue()
+        assertThat(viewStateObserver.values()[0].getProductDetailInFlight).isFalse()
+        assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isTrue()
     }
 
     @Test
@@ -58,7 +58,7 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
-        val viewState = testObserver.values()[1]
+        val viewState = viewStateObserver.values()[1]
         assertThat(viewState.productDetail?.name).isEqualTo(NAME)
         assertThat(viewState.productDetail?.description).isEqualTo(DESCRIPTION)
         assertThat(viewState.productDetail?.price).isEqualTo(PRICE)
@@ -74,8 +74,8 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
 
-        assertThat(testObserver.values()[1].getProductDetailError).isEqualTo(exception)
-        assertThat(testObserver.values()[1].getProductDetailInFlight).isFalse()
+        assertThat(viewStateObserver.values()[1].getProductDetailError).isEqualTo(exception)
+        assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isFalse()
     }
 
     @Test
@@ -85,8 +85,8 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
-        assertThat(testObserver.values()[0].addToBasketInFlight).isFalse()
-        assertThat(testObserver.values()[1].addToBasketInFlight).isTrue()
+        assertThat(viewStateObserver.values()[0].addToBasketInFlight).isFalse()
+        assertThat(viewStateObserver.values()[1].addToBasketInFlight).isTrue()
     }
 
     @Test
@@ -96,9 +96,9 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
-        assertThat(testObserver.values()[0].addToBasketInFlight).isFalse()
-        assertThat(testObserver.values()[1].addToBasketInFlight).isTrue()
-        assertThat(testObserver.values()[2].addToBasketInFlight).isFalse()
+        assertThat(viewStateObserver.values()[0].addToBasketInFlight).isFalse()
+        assertThat(viewStateObserver.values()[1].addToBasketInFlight).isTrue()
+        assertThat(viewStateObserver.values()[2].addToBasketInFlight).isFalse()
     }
 
     @Test
@@ -109,9 +109,9 @@ class ProductDetailViewModelTest {
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)))
 
-        assertThat(testObserver.values()[0].addToBasketError).isNull()
-        assertThat(testObserver.values()[1].addToBasketError).isEqualTo(exception)
-        assertThat(testObserver.values()[1].addToBasketInFlight).isFalse()
+        assertThat(viewStateObserver.values()[0].addToBasketError).isNull()
+        assertThat(viewStateObserver.values()[1].addToBasketError).isEqualTo(exception)
+        assertThat(viewStateObserver.values()[1].addToBasketInFlight).isFalse()
     }
 
     private fun givenAProductDetailViewModel() = ProductDetailViewModel(productDetailUseCase, productDetailTracker)
