@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MVI Sample</string>
+    <string name="title_activity_product_picker">ProductPicker</string>
 </resources>

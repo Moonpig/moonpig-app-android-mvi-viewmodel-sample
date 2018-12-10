@@ -1,5 +1,7 @@
 package com.moonpig.mvisample.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.moonpig.mvisample.MVIExampleApplication
@@ -76,4 +78,14 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
         Picasso.get().load(imageUrl).into(image)
     }
 
+    companion object {
+        private const val productIdKey = "productIdKey"
+
+        @JvmStatic
+        fun intentForProduct(context: Context, productId: Int): Intent {
+            val intent = Intent(context, ProductDetailActivity::class.java)
+            intent.putExtra(productIdKey, productId)
+            return intent
+        }
+    }
 }
