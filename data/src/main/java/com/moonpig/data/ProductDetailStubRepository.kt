@@ -13,7 +13,7 @@ class ProductDetailStubRepository : ProductDetailRepository {
                     RepositoryState.GetProductDetail.Success(
                             ProductDetail(
                                     "Advanced Cat Armor",
-                                    "Everything your kitty needs to seriously up it's fighting game! Accessories including the pictured pole not included.",
+                                    "Everything your kitty needs to seriously up it's fighting game! This stylish armor will protect your cat from ordinary piercing and blunt damage. Accessories including the pictured pole not included.",
                                     299,
                                     "https://i.postimg.cc/QtwNZdm4/cat-armor-1.jpg"
                             )
