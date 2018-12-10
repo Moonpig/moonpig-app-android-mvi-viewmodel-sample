@@ -10,11 +10,11 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import com.moonpig.mvisample.R
 
 class ProductDetailRobot {
-    fun isLoading() {
+    fun isLoading() = apply {
         onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(VISIBLE)))
     }
 
-    fun isNotLoading() {
+    fun isNotLoading() = apply {
         onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(GONE)))
     }
 
