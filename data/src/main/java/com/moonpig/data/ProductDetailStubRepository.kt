@@ -8,6 +8,12 @@ import io.reactivex.Observable
 
 class ProductDetailStubRepository : ProductDetailRepository {
     override fun getProductDetails(productId: String): Observable<RepositoryState.GetProductDetail> =
+            when (productId) {
+                "1" -> respondWithCatArmor()
+                else -> respondWithLoadError()
+            }
+
+    private fun respondWithCatArmor() =
             Observable.just(
                     RepositoryState.GetProductDetail.InFlight,
                     RepositoryState.GetProductDetail.Success(
@@ -18,6 +24,12 @@ class ProductDetailStubRepository : ProductDetailRepository {
                                     "https://i.postimg.cc/QtwNZdm4/cat-armor-1.jpg"
                             )
                     )
+            )
+
+    private fun respondWithLoadError() =
+            Observable.just(
+                    RepositoryState.GetProductDetail.InFlight,
+                    RepositoryState.GetProductDetail.Error(RuntimeException())
             )
 
     override fun addProductToBasket(addProductRequest: AddProductRequest): Observable<RepositoryState.AddProduct> =

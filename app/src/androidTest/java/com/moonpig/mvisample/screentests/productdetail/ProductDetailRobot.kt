@@ -29,4 +29,16 @@ class ProductDetailRobot {
     fun priceDisplayed(price: String) = apply {
         onView(withId(R.id.price)).check(matches(withText(price)))
     }
+
+    fun errorMessageDisplayed() = apply {
+        onView(withId(R.id.errorMessage))
+                .check(matches(withEffectiveVisibility(VISIBLE)))
+
+    }
+
+    fun errorMessageNotDisplayed() = apply {
+        onView(withId(R.id.errorMessage))
+                .check(matches(withEffectiveVisibility(GONE)))
+
+    }
 }

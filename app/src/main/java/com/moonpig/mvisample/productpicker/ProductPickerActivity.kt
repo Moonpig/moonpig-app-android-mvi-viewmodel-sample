@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.moonpig.mvisample.R
 import com.moonpig.mvisample.productdetail.ProductDetailActivity
+import kotlinx.android.synthetic.main.activity_product_picker.error
 import kotlinx.android.synthetic.main.activity_product_picker.success
 
 class ProductPickerActivity : AppCompatActivity() {
@@ -16,6 +17,12 @@ class ProductPickerActivity : AppCompatActivity() {
         success.setOnClickListener {
             ProductDetailActivity
                     .intentForProduct(this, "1")
+                    .launch()
+        }
+
+        error.setOnClickListener {
+            ProductDetailActivity
+                    .intentForProduct(this, "error")
                     .launch()
         }
     }

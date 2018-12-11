@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_product_detail.description
+import kotlinx.android.synthetic.main.activity_product_detail.errorMessage
 import kotlinx.android.synthetic.main.activity_product_detail.image
 import kotlinx.android.synthetic.main.activity_product_detail.name
 import kotlinx.android.synthetic.main.activity_product_detail.price
@@ -78,6 +79,10 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
 
     override fun displayImage(imageUrl: String) {
         Picasso.get().load(imageUrl).into(image)
+    }
+
+    override fun showLoadingError(isVisible: Boolean) {
+        errorMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     companion object {

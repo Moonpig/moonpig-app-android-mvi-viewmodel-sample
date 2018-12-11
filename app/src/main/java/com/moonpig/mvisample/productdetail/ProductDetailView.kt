@@ -6,4 +6,5 @@ interface ProductDetailView {
     fun displayDescription(description: String)
     fun displayPrice(price: String)
     fun displayImage(imageUrl: String)
+    fun showLoadingError(isVisible: Boolean)
 }

@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
+import java.io.IOException
 
 class ProductDetailRendererTest {
 
@@ -60,5 +61,27 @@ class ProductDetailRendererTest {
         verify(view, never()).displayDescription(any())
         verify(view, never()).displayPrice(any())
         verify(view, never()).displayImage(any())
+    }
+
+    @Test
+    fun shouldHideErrorMessage_whenProductDetailErrorIsNull() {
+        val viewState = ProductDetailScreenViewState (
+                getProductDetailError = null
+        )
+
+        productDetailRenderer.render(view, viewState)
+
+        verify(view).showLoadingError(false)
+    }
+
+    @Test
+    fun shouldDisplayErrorMessage_whenProductDetailErrorSet() {
+        val viewState = ProductDetailScreenViewState (
+                getProductDetailError = IOException()
+        )
+
+        productDetailRenderer.render(view, viewState)
+
+        verify(view).showLoadingError(true)
     }
 }
