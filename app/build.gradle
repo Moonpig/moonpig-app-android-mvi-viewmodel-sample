@@ -32,6 +32,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:support-annotations:$supportLibraryVersion" // used by picasso
+    implementation "com.android.support:exifinterface:$supportLibraryVersion" // used by picasso
     implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion" // use -ktx for Kotlin
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
