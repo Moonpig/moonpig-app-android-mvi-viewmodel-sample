@@ -1,10 +1,13 @@
 package com.moonpig.mvisample.productdetail
 
+import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
 import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
 import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
-import com.moonpig.mvisample.domain.entities.ProductDetail
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
@@ -19,17 +22,14 @@ class ProductDetailViewModelTest {
     private val viewStateObserver = viewModel.viewState().test()
 
     @Test
-    fun shouldEmitInitialIntentOnce() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
-                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.AddProductToBasket(PRODUCT_ID, QUANTITY)))
-                .thenReturn(Observable.just(ProductDetailResult.AddProduct.Success))
+    fun shouldOnlyUseOneInitialIntent() {
+        whenever(productDetailUseCase.resultFrom(any()))
+                .thenReturn(Observable.never())
 
         viewModel.bindIntents(Observable.merge(Observable.just(ProductDetailIntent.Initial),
-                                               Observable.just(ProductDetailIntent.AddToBasket(PRODUCT_ID, QUANTITY)),
                                                Observable.just(ProductDetailIntent.Initial)))
 
-        assertThat(viewStateObserver.valueCount()).isEqualTo(2)
+        verify(productDetailUseCase, times(1)).resultFrom(any())
     }
 
     @Test
