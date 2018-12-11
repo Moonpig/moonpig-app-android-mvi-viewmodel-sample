@@ -92,8 +92,10 @@
     <TextView
         android:id="@+id/errorMessage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         android:text="@string/error_message"
         android:textSize="30sp"
         android:textStyle="bold"
