@@ -11,6 +11,7 @@ import com.nhaarman.mockito_kotlin.given
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 
 class ProductDetailTests {
 
@@ -72,5 +73,18 @@ class ProductDetailTests {
                 .nameDisplayed("name")
                 .descriptionDisplayed("desc")
                 .priceDisplayed("£0")
+    }
+
+    @Test
+    fun shouldNotBeShowingLoadingIndicator_whenLoadingFails() {
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
+                .willReturn(Observable.just(
+                        RepositoryState.GetProductDetail.InFlight,
+                        RepositoryState.GetProductDetail.Error(IOException("Product not found"))
+                ))
+        givenAProductDetailActivity()
+
+        ProductDetailRobot()
+                .isNotLoading()
     }
 }
