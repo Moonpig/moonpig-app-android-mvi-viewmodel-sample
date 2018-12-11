@@ -8,13 +8,13 @@ class ProductDetailUseCase(private val productDetailRepository: ProductDetailRep
 
     override fun resultFrom(action: ProductDetailAction): Observable<ProductDetailResult> {
         return when (action) {
-            is ProductDetailAction.LoadProductDetail -> getProductDetail()
+            is ProductDetailAction.LoadProductDetail -> getProductDetail(action.productId)
             is ProductDetailAction.AddProductToBasket -> addProductToBasket(action.productId, action.quantity)
         }
     }
 
-    private fun getProductDetail(): Observable<ProductDetailResult> =
-            productDetailRepository.getProductDetails()
+    private fun getProductDetail(productId: String): Observable<ProductDetailResult> =
+            productDetailRepository.getProductDetails(productId)
                     .map {
                         when (it) {
                             is RepositoryState.GetProductDetail.InFlight -> ProductDetailResult.GetProductDetail.InFlight

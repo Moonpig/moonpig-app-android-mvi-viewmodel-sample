@@ -7,7 +7,7 @@ import com.moonpig.mvisample.domain.productdetail.RepositoryState
 import io.reactivex.Observable
 
 class ProductDetailStubRepository : ProductDetailRepository {
-    override fun getProductDetails(): Observable<RepositoryState.GetProductDetail> =
+    override fun getProductDetails(productId: String): Observable<RepositoryState.GetProductDetail> =
             Observable.just(
                     RepositoryState.GetProductDetail.InFlight,
                     RepositoryState.GetProductDetail.Success(

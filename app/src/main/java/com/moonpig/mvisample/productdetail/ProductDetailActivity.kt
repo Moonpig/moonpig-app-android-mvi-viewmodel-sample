@@ -44,14 +44,16 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
                 .addToDisposables()
 
         viewModel.bindIntents(Observable.mergeArray(
-            initialIntent()
+                initialIntent()
         ))
     }
 
     private fun renderStateToView(viewState: ProductDetailScreenViewState) =
             productDetailRenderer.render(this, viewState)
 
-    private fun initialIntent() = Observable.just(ProductDetailIntent.Initial)
+    private fun initialIntent() = Observable.just(ProductDetailIntent.Initial(
+            intent.getStringExtra(productIdKey) ?: ""
+    ))
 
     override fun onDestroy() {
         super.onDestroy()
@@ -82,7 +84,7 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
         private const val productIdKey = "productIdKey"
 
         @JvmStatic
-        fun intentForProduct(context: Context, productId: Int): Intent {
+        fun intentForProduct(context: Context, productId: String): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(productIdKey, productId)
             return intent

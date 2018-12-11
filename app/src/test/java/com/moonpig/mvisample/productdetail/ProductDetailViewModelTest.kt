@@ -26,8 +26,8 @@ class ProductDetailViewModelTest {
         whenever(productDetailUseCase.resultFrom(any()))
                 .thenReturn(Observable.never())
 
-        viewModel.bindIntents(Observable.merge(Observable.just(ProductDetailIntent.Initial),
-                                               Observable.just(ProductDetailIntent.Initial)))
+        viewModel.bindIntents(Observable.merge(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)),
+                                               Observable.just(ProductDetailIntent.Initial(PRODUCT_ID))))
 
         verify(productDetailUseCase, times(1)).resultFrom(any())
     }
@@ -39,10 +39,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitInFlightState_whenGetProductInFlight() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID)))
                 .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
 
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
         assertThat(viewStateObserver.values()[0].getProductDetailInFlight).isFalse()
         assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isTrue()
@@ -51,9 +51,9 @@ class ProductDetailViewModelTest {
     @Test
     fun shouldEmitSuccessState_whenGetProductSuccess() {
         val productDetail = ProductDetailResult.GetProductDetail.Success(ProductDetail(NAME, DESCRIPTION, PRICE, IMAGE_URL))
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(productDetail))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID))).thenReturn(Observable.just(productDetail))
 
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
         val viewState = viewStateObserver.values()[1]
         assertThat(viewState.productDetail?.name).isEqualTo(NAME)
@@ -67,9 +67,9 @@ class ProductDetailViewModelTest {
     fun shouldEmitErrorState_whenGetProductError() {
         val exception = RuntimeException()
         val error = ProductDetailResult.GetProductDetail.Error(exception)
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail)).thenReturn(Observable.just(error))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID))).thenReturn(Observable.just(error))
 
-        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial))
+        viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
         assertThat(viewStateObserver.values()[1].getProductDetailError).isEqualTo(exception)
         assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isFalse()

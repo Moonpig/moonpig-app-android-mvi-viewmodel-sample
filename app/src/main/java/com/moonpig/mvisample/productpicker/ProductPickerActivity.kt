@@ -15,7 +15,7 @@ class ProductPickerActivity : AppCompatActivity() {
 
         success.setOnClickListener {
             ProductDetailActivity
-                    .intentForProduct(this, 1)
+                    .intentForProduct(this, "1")
                     .launch()
         }
     }

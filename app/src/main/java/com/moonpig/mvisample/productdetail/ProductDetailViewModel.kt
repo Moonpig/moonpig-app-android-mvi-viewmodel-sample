@@ -25,7 +25,7 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
 
     override fun actionFrom(intent: ProductDetailIntent): ProductDetailAction =
             when (intent) {
-                is ProductDetailIntent.Initial -> ProductDetailAction.LoadProductDetail
+                is ProductDetailIntent.Initial -> ProductDetailAction.LoadProductDetail(intent.productId)
                 is ProductDetailIntent.AddToBasket -> ProductDetailAction.AddProductToBasket(intent.productId, intent.quantity)
             }
 
@@ -48,7 +48,7 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
 }
 
 sealed class ProductDetailIntent : BaseIntent {
-    object Initial : ProductDetailIntent()
+    data class Initial(val productId: String) : ProductDetailIntent()
     data class AddToBasket(val productId: String, val quantity: Int) : ProductDetailIntent()
 }
 
