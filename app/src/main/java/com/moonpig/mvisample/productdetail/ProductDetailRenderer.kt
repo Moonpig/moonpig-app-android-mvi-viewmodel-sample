@@ -13,9 +13,7 @@ class ProductDetailRenderer {
     }
 
     private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
-        viewState.getProductDetailSuccess?.let {
-            view.displayName(it.name)
-            view.displayDescription(it.description)
+        viewState.productDetail?.let {
             view.displayPrice("£${it.price}")
             view.displayImage(it.imageUrl)
         }

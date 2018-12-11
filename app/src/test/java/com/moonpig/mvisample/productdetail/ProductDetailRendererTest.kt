@@ -33,7 +33,7 @@ class ProductDetailRendererTest {
     @Test
     fun shouldDisplayProductDetails_whenFetchingSucceeded() {
         val viewState = ProductDetailScreenViewState(
-                getProductDetailSuccess = ProductDetailViewState(
+                productDetail = ProductDetailViewState(
                         "Name",
                         "Description",
                         100,
@@ -43,8 +43,6 @@ class ProductDetailRendererTest {
 
         productDetailRenderer.render(view, viewState)
 
-        verify(view).displayName("Name")
-        verify(view).displayDescription("Description")
         verify(view).displayPrice("£100")
         verify(view).displayImage("imageUrl")
     }
@@ -52,13 +50,11 @@ class ProductDetailRendererTest {
     @Test
     fun shouldNotDisplayProductDetails_whenProductDetailIsNone() {
         val viewState = ProductDetailScreenViewState(
-                getProductDetailSuccess = null
+                productDetail = null
         )
 
         productDetailRenderer.render(view, viewState)
 
-        verify(view, never()).displayName(any())
-        verify(view, never()).displayDescription(any())
         verify(view, never()).displayPrice(any())
         verify(view, never()).displayImage(any())
     }
