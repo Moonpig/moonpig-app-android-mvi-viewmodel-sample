@@ -34,9 +34,6 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitNullObjectProductDetail_whenInitialised() {
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail))
-                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
-
         assertThat(viewStateObserver.values()[0].productDetail).isNull()
     }
 
