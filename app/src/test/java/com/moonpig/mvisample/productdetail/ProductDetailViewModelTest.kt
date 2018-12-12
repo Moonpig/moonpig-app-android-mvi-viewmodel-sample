@@ -66,13 +66,12 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitErrorState_whenGetProductError() {
-        val exception = RuntimeException()
-        val error = ProductDetailResult.GetProductDetail.Error(exception)
-        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID))).thenReturn(Observable.just(error))
+        whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID)))
+                .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.Error(RuntimeException())))
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
-        assertThat(viewStateObserver.values()[1].getProductDetailError).isEqualTo(exception)
+        assertThat(viewStateObserver.values()[1].productDetailErrorVisibility).isEqualTo(Visibility.VISIBLE)
         assertThat(viewStateObserver.values()[1].loadingIndicatorVisibility).isEqualTo(Visibility.GONE)
     }
 

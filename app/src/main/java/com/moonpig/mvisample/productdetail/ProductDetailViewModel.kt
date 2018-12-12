@@ -35,11 +35,11 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                 is ProductDetailResult.GetProductDetail.InFlight -> previousViewState.copy(loadingIndicatorVisibility = Visibility.VISIBLE)
                 is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(loadingIndicatorVisibility = Visibility.GONE,
                                                                                           productDetail = ProductDetailViewState(name = result.productDetail.name,
-                                                                                                                                           description = result.productDetail.description,
-                                                                                                                                           price = "£${result.productDetail.price}",
-                                                                                                                                           imageUrl = result.productDetail.imageUrl))
+                                                                                                                                 description = result.productDetail.description,
+                                                                                                                                 price = "£${result.productDetail.price}",
+                                                                                                                                 imageUrl = result.productDetail.imageUrl))
                 is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(loadingIndicatorVisibility = Visibility.GONE,
-                                                                                        getProductDetailError = result.throwable)
+                                                                                        productDetailErrorVisibility = Visibility.VISIBLE)
 
                 is ProductDetailResult.AddProduct.InFlight -> previousViewState.copy(addToBasketInFlight = true)
                 is ProductDetailResult.AddProduct.Success -> previousViewState.copy(addToBasketInFlight = false)

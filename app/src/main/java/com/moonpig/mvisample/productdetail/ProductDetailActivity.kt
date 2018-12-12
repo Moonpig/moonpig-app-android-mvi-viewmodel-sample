@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.view.View
 import com.moonpig.mvisample.MVIExampleApplication
 import com.moonpig.mvisample.R
 import com.moonpig.mvisample.databinding.ActivityProductDetailBinding
@@ -12,16 +11,14 @@ import com.moonpig.mvisample.di.productdetail.ProductDetailsComponent
 import com.moonpig.mvisample.mvibase.BaseActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_product_detail.errorMessage
 import javax.inject.Inject
 
-class ProductDetailActivity : BaseActivity(), ProductDetailView {
+class ProductDetailActivity : BaseActivity() {
     @Inject lateinit var viewModelFactory: ProductDetailViewModelFactory
 
     private val viewModel: ProductDetailViewModel by lazy {
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
-    private val productDetailRenderer = ProductDetailRenderer()
     private val component: ProductDetailsComponent by lazy {
         (application as MVIExampleApplication).applicationComponent.productDetailsComponent()
     }
@@ -48,7 +45,6 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
 
     private fun renderStateToView(viewState: ProductDetailScreenViewState) {
         binding.viewState = viewState
-        productDetailRenderer.render(this, viewState)
     }
 
     private fun initialIntent() = Observable.just(ProductDetailIntent.Initial(
@@ -58,10 +54,6 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
-    }
-
-    override fun showLoadingError(isVisible: Boolean) {
-        errorMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     companion object {
