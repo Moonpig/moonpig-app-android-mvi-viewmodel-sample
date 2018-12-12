@@ -3,4 +3,6 @@
     <string name="title_activity_product_picker">ProductPicker</string>
     <string name="error_message">Hmmm… Something went wrong, please try again later!</string>
     <string name="retry">retry</string>
+    <string name="failing_load">Failing Load</string>
+    <string name="successful_load">Successful Load</string>
 </resources>
