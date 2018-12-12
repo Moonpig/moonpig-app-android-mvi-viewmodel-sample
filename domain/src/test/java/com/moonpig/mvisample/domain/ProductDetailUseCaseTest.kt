@@ -19,16 +19,15 @@ internal class ProductDetailUseCaseTest {
 
     @Test
     fun shouldGetProductDetail() {
-        whenever(productDetailRepository.getProductDetails())
+        whenever(productDetailRepository.getProductDetails(productId))
                 .thenReturn(Observable.just(RepositoryState.GetProductDetail.InFlight,
                                             RepositoryState.GetProductDetail.Success(productDetail)))
 
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
         val testObserver =
-                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail).test()
+                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(productId)).test()
 
-        verify(productDetailRepository).getProductDetails()
         testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
                                   ProductDetailResult.GetProductDetail.Success(productDetail))
         testObserver.assertComplete()
@@ -36,16 +35,15 @@ internal class ProductDetailUseCaseTest {
 
     @Test
     fun shouldReturnError_whenGetProductDetailFails() {
-        whenever(productDetailRepository.getProductDetails())
+        whenever(productDetailRepository.getProductDetails(productId))
                 .thenReturn(Observable.just(RepositoryState.GetProductDetail.InFlight,
                                             RepositoryState.GetProductDetail.Error(throwable)))
 
         val productDetailUseCase = ProductDetailUseCase(productDetailRepository)
 
         val testObserver =
-                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail).test()
+                productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(productId)).test()
 
-        verify(productDetailRepository).getProductDetails()
         testObserver.assertValues(ProductDetailResult.GetProductDetail.InFlight,
                                   ProductDetailResult.GetProductDetail.Error(throwable))
         testObserver.assertComplete()

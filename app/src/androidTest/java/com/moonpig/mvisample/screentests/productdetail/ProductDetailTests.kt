@@ -11,6 +11,7 @@ import com.nhaarman.mockito_kotlin.given
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 
 class ProductDetailTests {
 
@@ -22,13 +23,13 @@ class ProductDetailTests {
                 DaggerTestApplicationComponent.builder()
                         .build()
 
-        val intent = Intent(ScreenTestApplication.instance, ProductDetailActivity::class.java)
+        val intent = ProductDetailActivity.intentForProduct(ScreenTestApplication.instance, productId)
         testRule.launchActivity(intent)
     }
 
     @Test
     fun shouldBeShowingLoadingIndicator() {
-        given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
                 .willReturn(Observable.just(RepositoryState.GetProductDetail.InFlight))
         givenAProductDetailActivity()
 
@@ -38,7 +39,7 @@ class ProductDetailTests {
 
     @Test
     fun shouldNotBeShowingLoadingIndicatorAfterFetchingFinished() {
-        given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
                 .willReturn(Observable.just(
                         RepositoryState.GetProductDetail.InFlight,
                         RepositoryState.GetProductDetail.Success(ProductDetail(
@@ -56,7 +57,7 @@ class ProductDetailTests {
 
     @Test
     fun shouldShowProductDetails_whenFetchingSucceeds() {
-        given(MockProductDetailDataModule.productDetailRepository.getProductDetails())
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
                 .willReturn(Observable.just(
                         RepositoryState.GetProductDetail.InFlight,
                         RepositoryState.GetProductDetail.Success(ProductDetail(
@@ -72,5 +73,45 @@ class ProductDetailTests {
                 .nameDisplayed("name")
                 .descriptionDisplayed("desc")
                 .priceDisplayed("£0")
+    }
+
+    @Test
+    fun shouldNotBeShowingLoadingIndicator_whenLoadingFails() {
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
+                .willReturn(Observable.just(
+                        RepositoryState.GetProductDetail.InFlight,
+                        RepositoryState.GetProductDetail.Error(IOException("Product not found"))
+                ))
+        givenAProductDetailActivity()
+
+        ProductDetailRobot()
+                .isNotLoading()
+    }
+
+    @Test
+    fun shouldNotShowErrorMessage_whenLoading() {
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
+                .willReturn(Observable.just(RepositoryState.GetProductDetail.InFlight))
+        givenAProductDetailActivity()
+
+        ProductDetailRobot()
+                .errorMessageNotDisplayed()
+    }
+
+    @Test
+    fun shouldShowErrorMessage_whenLoadingFails() {
+        given(MockProductDetailDataModule.productDetailRepository.getProductDetails(productId))
+                .willReturn(Observable.just(
+                        RepositoryState.GetProductDetail.InFlight,
+                        RepositoryState.GetProductDetail.Error(IOException("Product not found"))
+                ))
+        givenAProductDetailActivity()
+
+        ProductDetailRobot()
+                .errorMessageDisplayed()
+    }
+
+    companion object {
+        const val productId = "productId"
     }
 }

@@ -11,7 +11,7 @@ import io.reactivex.ObservableTransformer
 class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                              productDetailTracker: ProductDetailTracker) :
         BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailScreenViewState>(productDetailUseCase,
-                                                                                                                                                                                                         productDetailTracker) {
+                                                                                                                   productDetailTracker) {
 
     override fun intentFilter(): ObservableTransformer<ProductDetailIntent, ProductDetailIntent> =
             ObservableTransformer { observable ->
@@ -25,7 +25,7 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
 
     override fun actionFrom(intent: ProductDetailIntent): ProductDetailAction =
             when (intent) {
-                is ProductDetailIntent.Initial -> ProductDetailAction.LoadProductDetail
+                is ProductDetailIntent.Initial -> ProductDetailAction.LoadProductDetail(intent.productId)
                 is ProductDetailIntent.AddToBasket -> ProductDetailAction.AddProductToBasket(intent.productId, intent.quantity)
             }
 
@@ -33,22 +33,22 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
             when (result) {
                 is ProductDetailResult.GetProductDetail.InFlight -> previousViewState.copy(getProductDetailInFlight = true)
                 is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(getProductDetailInFlight = false,
-                                                                                                                                     productDetail = ProductDetailViewState(name = result.productDetail.name,
-                                                                                                                                 description = result.productDetail.description,
-                                                                                                                                 price = result.productDetail.price,
-                                                                                                                                 imageUrl = result.productDetail.imageUrl))
+                                                                                          getProductDetailSuccess = ProductDetailViewState(name = result.productDetail.name,
+                                                                                                                                           description = result.productDetail.description,
+                                                                                                                                           price = result.productDetail.price,
+                                                                                                                                           imageUrl = result.productDetail.imageUrl))
                 is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(getProductDetailInFlight = false,
-                                                                                                                                   getProductDetailError = result.throwable)
+                                                                                        getProductDetailError = result.throwable)
 
                 is ProductDetailResult.AddProduct.InFlight -> previousViewState.copy(addToBasketInFlight = true)
                 is ProductDetailResult.AddProduct.Success -> previousViewState.copy(addToBasketInFlight = false)
                 is ProductDetailResult.AddProduct.Error -> previousViewState.copy(addToBasketInFlight = false,
-                                                                                                                             addToBasketError = result.throwable)
+                                                                                  addToBasketError = result.throwable)
             }
 }
 
 sealed class ProductDetailIntent : BaseIntent {
-    object Initial : ProductDetailIntent()
+    data class Initial(val productId: String) : ProductDetailIntent()
     data class AddToBasket(val productId: String, val quantity: Int) : ProductDetailIntent()
 }
 

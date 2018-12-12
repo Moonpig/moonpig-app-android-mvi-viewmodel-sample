@@ -1,5 +1,7 @@
 package com.moonpig.mvisample.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.moonpig.mvisample.MVIExampleApplication
@@ -10,6 +12,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_product_detail.description
+import kotlinx.android.synthetic.main.activity_product_detail.errorMessage
 import kotlinx.android.synthetic.main.activity_product_detail.image
 import kotlinx.android.synthetic.main.activity_product_detail.name
 import kotlinx.android.synthetic.main.activity_product_detail.price
@@ -42,14 +45,16 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
                 .addToDisposables()
 
         viewModel.bindIntents(Observable.mergeArray(
-            initialIntent()
+                initialIntent()
         ))
     }
 
     private fun renderStateToView(viewState: ProductDetailScreenViewState) =
             productDetailRenderer.render(this, viewState)
 
-    private fun initialIntent() = Observable.just(ProductDetailIntent.Initial)
+    private fun initialIntent() = Observable.just(ProductDetailIntent.Initial(
+            intent.getStringExtra(productIdKey) ?: ""
+    ))
 
     override fun onDestroy() {
         super.onDestroy()
@@ -76,4 +81,18 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
         Picasso.get().load(imageUrl).into(image)
     }
 
+    override fun showLoadingError(isVisible: Boolean) {
+        errorMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    companion object {
+        private const val productIdKey = "productIdKey"
+
+        @JvmStatic
+        fun intentForProduct(context: Context, productId: String): Intent {
+            val intent = Intent(context, ProductDetailActivity::class.java)
+            intent.putExtra(productIdKey, productId)
+            return intent
+        }
+    }
 }

@@ -5,6 +5,7 @@ class ProductDetailRenderer {
     fun render(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         renderLoadingIndicator(view, viewState)
         renderProductDetail(view, viewState)
+        renderErrorIndicator(view, viewState)
     }
 
     private fun renderLoadingIndicator(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
@@ -12,11 +13,15 @@ class ProductDetailRenderer {
     }
 
     private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
-        viewState.productDetail?.let {
+        viewState.getProductDetailSuccess?.let {
             view.displayName(it.name)
             view.displayDescription(it.description)
             view.displayPrice("£${it.price}")
             view.displayImage(it.imageUrl)
         }
+    }
+
+    private fun renderErrorIndicator(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
+        view.showLoadingError(viewState.getProductDetailError != null)
     }
 }

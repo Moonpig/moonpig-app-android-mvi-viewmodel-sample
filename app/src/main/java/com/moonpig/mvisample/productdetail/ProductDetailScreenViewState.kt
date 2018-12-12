@@ -4,7 +4,7 @@ import com.moonpig.mvisample.mvibase.BaseViewState
 
 data class ProductDetailScreenViewState(val getProductDetailInFlight: Boolean = false,
                                         val getProductDetailError: Throwable? = null,
-                                        val productDetail: ProductDetailViewState? = null,
+                                        val getProductDetailSuccess: ProductDetailViewState? = null,
                                         val addToBasketInFlight: Boolean = false,
                                         val addToBasketError: Throwable? = null) :
         BaseViewState

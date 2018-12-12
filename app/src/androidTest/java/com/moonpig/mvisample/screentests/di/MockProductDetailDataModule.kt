@@ -1,6 +1,7 @@
 package com.moonpig.mvisample.screentests.di
 
 import com.moonpig.mvisample.domain.productdetail.ProductDetailRepository
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
@@ -14,7 +15,7 @@ class MockProductDetailDataModule {
         val productDetailRepository: ProductDetailRepository = mock()
 
         init {
-            given(productDetailRepository.getProductDetails()).willReturn(Observable.never())
+            given(productDetailRepository.getProductDetails(any())).willReturn(Observable.never())
         }
     }
 

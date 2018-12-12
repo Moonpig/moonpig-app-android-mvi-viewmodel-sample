@@ -4,7 +4,7 @@ import com.moonpig.mvisample.domain.entities.ProductDetail
 import io.reactivex.Observable
 
 interface ProductDetailRepository {
-    fun getProductDetails(): Observable<RepositoryState.GetProductDetail>
+    fun getProductDetails(productId: String): Observable<RepositoryState.GetProductDetail>
     fun addProductToBasket(addProductRequest: AddProductRequest): Observable<RepositoryState.AddProduct>
 }
 
