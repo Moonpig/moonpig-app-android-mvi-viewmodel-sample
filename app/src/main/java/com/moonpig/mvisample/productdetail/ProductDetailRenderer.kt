@@ -15,7 +15,6 @@ class ProductDetailRenderer {
     private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
         viewState.productDetail?.let {
             view.displayPrice("£${it.price}")
-            view.displayImage(it.imageUrl)
         }
     }
 

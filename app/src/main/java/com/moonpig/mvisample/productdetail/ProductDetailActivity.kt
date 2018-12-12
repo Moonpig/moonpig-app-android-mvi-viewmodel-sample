@@ -10,11 +10,9 @@ import com.moonpig.mvisample.R
 import com.moonpig.mvisample.databinding.ActivityProductDetailBinding
 import com.moonpig.mvisample.di.productdetail.ProductDetailsComponent
 import com.moonpig.mvisample.mvibase.BaseActivity
-import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_product_detail.errorMessage
-import kotlinx.android.synthetic.main.activity_product_detail.image
 import kotlinx.android.synthetic.main.activity_product_detail.price
 import kotlinx.android.synthetic.main.activity_product_detail.progressBar
 import javax.inject.Inject
@@ -70,10 +68,6 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
 
     override fun displayPrice(price: String) {
         this.price.text = price
-    }
-
-    override fun displayImage(imageUrl: String) {
-        Picasso.get().load(imageUrl).into(image)
     }
 
     override fun showLoadingError(isVisible: Boolean) {

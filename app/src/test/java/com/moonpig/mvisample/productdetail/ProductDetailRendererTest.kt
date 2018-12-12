@@ -44,7 +44,6 @@ class ProductDetailRendererTest {
         productDetailRenderer.render(view, viewState)
 
         verify(view).displayPrice("£100")
-        verify(view).displayImage("imageUrl")
     }
 
     @Test
@@ -56,8 +55,7 @@ class ProductDetailRendererTest {
         productDetailRenderer.render(view, viewState)
 
         verify(view, never()).displayPrice(any())
-        verify(view, never()).displayImage(any())
-    }
+      }
 
     @Test
     fun shouldHideErrorMessage_whenProductDetailErrorIsNull() {
