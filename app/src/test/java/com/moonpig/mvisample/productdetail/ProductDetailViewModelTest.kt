@@ -58,7 +58,7 @@ class ProductDetailViewModelTest {
         val viewState = viewStateObserver.values()[1]
         assertThat(viewState.productDetail?.name).isEqualTo(NAME)
         assertThat(viewState.productDetail?.description).isEqualTo(DESCRIPTION)
-        assertThat(viewState.productDetail?.price).isEqualTo(PRICE)
+        assertThat(viewState.productDetail?.price).isEqualTo("£$PRICE")
         assertThat(viewState.productDetail?.imageUrl).isEqualTo(IMAGE_URL)
         assertThat(viewState.getProductDetailInFlight).isFalse()
     }

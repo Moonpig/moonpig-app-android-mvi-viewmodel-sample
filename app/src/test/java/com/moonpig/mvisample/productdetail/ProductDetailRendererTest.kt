@@ -31,33 +31,6 @@ class ProductDetailRendererTest {
     }
 
     @Test
-    fun shouldDisplayProductDetails_whenFetchingSucceeded() {
-        val viewState = ProductDetailScreenViewState(
-                productDetail = ProductDetailViewState(
-                        "Name",
-                        "Description",
-                        100,
-                        "imageUrl"
-                )
-        )
-
-        productDetailRenderer.render(view, viewState)
-
-        verify(view).displayPrice("£100")
-    }
-
-    @Test
-    fun shouldNotDisplayProductDetails_whenProductDetailIsNone() {
-        val viewState = ProductDetailScreenViewState(
-                productDetail = null
-        )
-
-        productDetailRenderer.render(view, viewState)
-
-        verify(view, never()).displayPrice(any())
-      }
-
-    @Test
     fun shouldHideErrorMessage_whenProductDetailErrorIsNull() {
         val viewState = ProductDetailScreenViewState (
                 getProductDetailError = null

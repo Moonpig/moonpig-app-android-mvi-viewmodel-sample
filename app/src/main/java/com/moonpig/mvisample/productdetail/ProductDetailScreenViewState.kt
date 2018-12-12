@@ -12,6 +12,6 @@ data class ProductDetailScreenViewState(val getProductDetailInFlight: Boolean = 
 data class ProductDetailViewState(
         val name: String = "",
         val description: String = "",
-        val price: Int = 0,
+        val price: String = "",
         val imageUrl: String = ""
 )

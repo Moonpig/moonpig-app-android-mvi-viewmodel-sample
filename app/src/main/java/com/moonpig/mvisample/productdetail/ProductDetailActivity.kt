@@ -66,10 +66,6 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
         progressBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun displayPrice(price: String) {
-        this.price.text = price
-    }
-
     override fun showLoadingError(isVisible: Boolean) {
         errorMessage.visibility = if (isVisible) View.VISIBLE else View.GONE
     }

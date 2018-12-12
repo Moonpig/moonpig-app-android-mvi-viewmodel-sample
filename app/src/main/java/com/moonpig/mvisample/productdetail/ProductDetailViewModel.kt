@@ -35,8 +35,10 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                 is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(getProductDetailInFlight = false,
                                                                                           productDetail = ProductDetailViewState(name = result.productDetail.name,
                                                                                                                                  description = result.productDetail.description,
-                                                                                                                                 price = result.productDetail.price,
-                                                                                                                                 imageUrl = result.productDetail.imageUrl))
+                                                                                                                                 price = "£${result.productDetail.price}",
+                                                                                                                                 imageUrl = result.productDetail.imageUrl
+                                                                                          )
+                )
                 is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(getProductDetailInFlight = false,
                                                                                         getProductDetailError = result.throwable)
 
