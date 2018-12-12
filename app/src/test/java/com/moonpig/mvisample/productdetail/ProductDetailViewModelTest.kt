@@ -34,7 +34,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun shouldEmitNullObjectProductDetail_whenInitialised() {
-        assertThat(viewStateObserver.values()[0].productDetail).isNull()
+        assertThat(viewStateObserver.values()[0].getProductDetailSuccess).isNull()
     }
 
     @Test
@@ -56,10 +56,10 @@ class ProductDetailViewModelTest {
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
         val viewState = viewStateObserver.values()[1]
-        assertThat(viewState.productDetail?.name).isEqualTo(NAME)
-        assertThat(viewState.productDetail?.description).isEqualTo(DESCRIPTION)
-        assertThat(viewState.productDetail?.price).isEqualTo(PRICE)
-        assertThat(viewState.productDetail?.imageUrl).isEqualTo(IMAGE_URL)
+        assertThat(viewState.getProductDetailSuccess?.name).isEqualTo(NAME)
+        assertThat(viewState.getProductDetailSuccess?.description).isEqualTo(DESCRIPTION)
+        assertThat(viewState.getProductDetailSuccess?.price).isEqualTo(PRICE)
+        assertThat(viewState.getProductDetailSuccess?.imageUrl).isEqualTo(IMAGE_URL)
         assertThat(viewState.getProductDetailInFlight).isFalse()
     }
 

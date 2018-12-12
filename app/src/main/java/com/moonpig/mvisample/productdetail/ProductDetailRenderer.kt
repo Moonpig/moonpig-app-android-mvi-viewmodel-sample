@@ -13,7 +13,7 @@ class ProductDetailRenderer {
     }
 
     private fun renderProductDetail(view: ProductDetailView, viewState: ProductDetailScreenViewState) {
-        viewState.productDetail?.let {
+        viewState.getProductDetailSuccess?.let {
             view.displayName(it.name)
             view.displayDescription(it.description)
             view.displayPrice("£${it.price}")
