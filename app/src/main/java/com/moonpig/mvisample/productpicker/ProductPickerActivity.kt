@@ -22,16 +22,21 @@ class ProductPickerActivity : AppCompatActivity() {
 
         success.setOnClickListener {
             ProductDetailActivity
-                    .intentForProduct(this, "1")
+                    .intentForProduct(this, catArmourProductId)
                     .launch()
         }
 
         error.setOnClickListener {
             ProductDetailActivity
-                    .intentForProduct(this, "error")
+                    .intentForProduct(this, notExistingProductId)
                     .launch()
         }
     }
 
     private fun Intent.launch() = startActivity(this)
+
+    companion object {
+        private const val catArmourProductId = "1"
+        private const val notExistingProductId = "!@£$%"
+    }
 }

@@ -9,7 +9,7 @@ import io.reactivex.Observable
 class ProductDetailStubRepository : ProductDetailRepository {
     override fun getProductDetails(productId: String): Observable<RepositoryState.GetProductDetail> =
             when (productId) {
-                "1" -> respondWithCatArmor()
+                catArmourProductId -> respondWithCatArmor()
                 else -> respondWithLoadError()
             }
 
@@ -35,4 +35,8 @@ class ProductDetailStubRepository : ProductDetailRepository {
     override fun addProductToBasket(addProductRequest: AddProductRequest): Observable<RepositoryState.AddProduct> =
             Observable.just(RepositoryState.AddProduct.InFlight,
                             RepositoryState.AddProduct.Success)
+
+    companion object {
+        private const val catArmourProductId = "1"
+    }
 }
