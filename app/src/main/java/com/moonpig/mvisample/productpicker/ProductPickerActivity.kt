@@ -8,6 +8,12 @@ import com.moonpig.mvisample.productdetail.ProductDetailActivity
 import kotlinx.android.synthetic.main.activity_product_picker.error
 import kotlinx.android.synthetic.main.activity_product_picker.success
 
+/**
+ * This class does not follow the MVI pattern.
+ * This was a deliberate decision as it should only help with putting the {ProductDetailActivity}
+ * into different states by passing different productIds which are interpreted by the fake
+ * data source.
+ */
 class ProductPickerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
