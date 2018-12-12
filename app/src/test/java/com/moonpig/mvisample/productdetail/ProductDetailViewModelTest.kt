@@ -4,6 +4,7 @@ import com.moonpig.mvisample.domain.entities.ProductDetail
 import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
 import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
 import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
+import com.moonpig.mvisample.mvibase.Visibility
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
@@ -38,14 +39,14 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun shouldEmitInFlightState_whenGetProductInFlight() {
+    fun shouldEmitLoadingState_whenGetProductInFlight() {
         whenever(productDetailUseCase.resultFrom(ProductDetailAction.LoadProductDetail(PRODUCT_ID)))
                 .thenReturn(Observable.just(ProductDetailResult.GetProductDetail.InFlight))
 
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
-        assertThat(viewStateObserver.values()[0].getProductDetailInFlight).isFalse()
-        assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isTrue()
+        assertThat(viewStateObserver.values()[0].loadingIndicatorVisibility).isEqualTo(Visibility.GONE)
+        assertThat(viewStateObserver.values()[1].loadingIndicatorVisibility).isEqualTo(Visibility.VISIBLE)
     }
 
     @Test
@@ -60,7 +61,7 @@ class ProductDetailViewModelTest {
         assertThat(viewState.productDetail?.description).isEqualTo(DESCRIPTION)
         assertThat(viewState.productDetail?.price).isEqualTo("£$PRICE")
         assertThat(viewState.productDetail?.imageUrl).isEqualTo(IMAGE_URL)
-        assertThat(viewState.getProductDetailInFlight).isFalse()
+        assertThat(viewState.loadingIndicatorVisibility).isEqualTo(Visibility.GONE)
     }
 
     @Test
@@ -72,7 +73,7 @@ class ProductDetailViewModelTest {
         viewModel.bindIntents(Observable.just(ProductDetailIntent.Initial(PRODUCT_ID)))
 
         assertThat(viewStateObserver.values()[1].getProductDetailError).isEqualTo(exception)
-        assertThat(viewStateObserver.values()[1].getProductDetailInFlight).isFalse()
+        assertThat(viewStateObserver.values()[1].loadingIndicatorVisibility).isEqualTo(Visibility.GONE)
     }
 
     @Test

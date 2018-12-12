@@ -13,8 +13,6 @@ import com.moonpig.mvisample.mvibase.BaseActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_product_detail.errorMessage
-import kotlinx.android.synthetic.main.activity_product_detail.price
-import kotlinx.android.synthetic.main.activity_product_detail.progressBar
 import javax.inject.Inject
 
 class ProductDetailActivity : BaseActivity(), ProductDetailView {
@@ -60,10 +58,6 @@ class ProductDetailActivity : BaseActivity(), ProductDetailView {
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
-    }
-
-    override fun isLoading(visible: Boolean) {
-        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun showLoadingError(isVisible: Boolean) {
