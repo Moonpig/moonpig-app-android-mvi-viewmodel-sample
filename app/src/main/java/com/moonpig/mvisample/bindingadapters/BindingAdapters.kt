@@ -16,10 +16,7 @@ fun loadImage(view: ImageView, url: String?) {
 
 @BindingAdapter("mappedVisibility")
 fun mapVisibility(view: View, visibility: Visibility?) {
-    if (visibility == null || view.visibility == visibility.toAndroidVisibility())
-        return
-
-    view.visibility = visibility.toAndroidVisibility()
+    visibility?.toAndroidVisibility()?.let { view.visibility = it }
 }
 
 private fun Visibility.toAndroidVisibility() = when (this) {
