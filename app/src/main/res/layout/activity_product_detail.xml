@@ -13,7 +13,6 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".productdetail.ProductDetailActivity">
@@ -107,8 +106,8 @@
 
         <TextView
             android:id="@+id/errorMessage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/colorPrimary"
             android:gravity="center"
             android:text="@string/error_message"
