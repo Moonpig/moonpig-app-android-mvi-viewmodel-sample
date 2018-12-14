@@ -2,6 +2,7 @@ package com.moonpig.mvisample.productdetail
 
 import android.content.Context
 import android.content.Intent
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.moonpig.mvisample.MVIExampleApplication
@@ -17,11 +18,13 @@ class ProductDetailActivity : BaseActivity() {
     @Inject lateinit var viewModelFactory: ProductDetailViewModelFactory
 
     private val viewModel: ProductDetailViewModel by lazy {
-        viewModelFactory.create(ProductDetailViewModel::class.java)
+        ViewModelProviders.of(this, this.viewModelFactory).get(ProductDetailViewModel::class.java)
     }
+
     private val component: ProductDetailsComponent by lazy {
         (application as MVIExampleApplication).applicationComponent.productDetailsComponent()
     }
+
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
