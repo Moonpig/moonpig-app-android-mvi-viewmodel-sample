@@ -6,7 +6,6 @@ import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS : BaseViewState>(private val baseUseCase: BaseUseCase<A, R>,
@@ -24,8 +23,13 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS 
         return viewStateObservable
     }
 
-    private fun compose(): Observable<VS> {
-        return BehaviorSubject.create<VS>().apply {
+    /**
+     * We use `replay(1).autoConnect()` instead of a [io.reactivex.subjects.BehaviorSubject] to
+     * cache the last item. This is important as the BehaviorSubject will clear the last item if
+     * it is terminated. This might happen on simple views that just render out data and don't have
+     * any intent sources that stay open throughout the activity's lifetime.
+     */
+    private fun compose(): Observable<VS> =
             intentSubject
                     .compose(intentFilter())
                     .doOnNext(tracker::trackIntent)
@@ -34,9 +38,8 @@ abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS 
                     .scan(initialViewState(), ::reduce)
                     .distinctUntilChanged()
                     .doOnNext(tracker::trackViewState)
-                    .subscribe(this)
-        }
-    }
+                    .replay(1)
+                    .autoConnect()
 
     protected abstract fun intentFilter(): ObservableTransformer<I, I>
     protected abstract fun initialViewState(): VS
