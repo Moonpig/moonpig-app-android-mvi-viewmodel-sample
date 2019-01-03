@@ -20,6 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 androidExtensions {
@@ -35,6 +38,7 @@ dependencies {
     implementation "com.android.support:support-annotations:$supportLibraryVersion" // used by picasso
     implementation "com.android.support:exifinterface:$supportLibraryVersion" // used by picasso
     implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion" // use -ktx for Kotlin
+    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}"

@@ -5,6 +5,7 @@ import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
 import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
 import com.moonpig.mvisample.mvibase.BaseIntent
 import com.moonpig.mvisample.mvibase.BaseViewModel
+import com.moonpig.mvisample.mvibase.Visibility
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 
@@ -31,14 +32,14 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
 
     override fun reduce(previousViewState: ProductDetailScreenViewState, result: ProductDetailResult): ProductDetailScreenViewState =
             when (result) {
-                is ProductDetailResult.GetProductDetail.InFlight -> previousViewState.copy(getProductDetailInFlight = true)
-                is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(getProductDetailInFlight = false,
-                                                                                          getProductDetailSuccess = ProductDetailViewState(name = result.productDetail.name,
-                                                                                                                                           description = result.productDetail.description,
-                                                                                                                                           price = result.productDetail.price,
-                                                                                                                                           imageUrl = result.productDetail.imageUrl))
-                is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(getProductDetailInFlight = false,
-                                                                                        getProductDetailError = result.throwable)
+                is ProductDetailResult.GetProductDetail.InFlight -> previousViewState.copy(loadingIndicatorVisibility = Visibility.VISIBLE)
+                is ProductDetailResult.GetProductDetail.Success -> previousViewState.copy(loadingIndicatorVisibility = Visibility.GONE,
+                                                                                          productDetail = ProductDetailViewState(name = result.productDetail.name,
+                                                                                                                                 description = result.productDetail.description,
+                                                                                                                                 price = "£${result.productDetail.price}",
+                                                                                                                                 imageUrl = result.productDetail.imageUrl))
+                is ProductDetailResult.GetProductDetail.Error -> previousViewState.copy(loadingIndicatorVisibility = Visibility.GONE,
+                                                                                        productDetailErrorVisibility = Visibility.VISIBLE)
 
                 is ProductDetailResult.AddProduct.InFlight -> previousViewState.copy(addToBasketInFlight = true)
                 is ProductDetailResult.AddProduct.Success -> previousViewState.copy(addToBasketInFlight = false)
