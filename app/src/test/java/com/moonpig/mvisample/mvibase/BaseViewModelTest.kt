@@ -3,9 +3,10 @@ package com.moonpig.mvisample.mvibase
 import com.moonpig.mvisample.domain.mvibase.BaseAction
 import com.moonpig.mvisample.domain.mvibase.BaseResult
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
+import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.willReturn
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +15,7 @@ import org.junit.Test
 internal class BaseViewModelTest {
 
     private val testUseCase: BaseUseCase<TestAction, TestResult> = mock()
-    private val testTracker: BaseTracker<TestViewState, TestIntent> = mock()
+    private val testTracker: BaseTracker<TestViewState, TestIntent, TestViewAction> = mock()
 
     @Test
     fun shouldBindInitialIntentAndReturnInitialViewState() {
@@ -93,15 +94,25 @@ internal class BaseViewModelTest {
     }
 
     private fun givenATestViewModel(): TestViewModel {
-        whenever(testUseCase.resultFrom(TestAction.First)).thenReturn(Observable.just(TestResult.First))
-        whenever(testUseCase.resultFrom(TestAction.Second)).thenReturn(Observable.just(TestResult.Second))
+        given(testUseCase.resultFrom(TestAction.First)).willReturn { Observable.just(TestResult.First) }
+        given(testUseCase.resultFrom(TestAction.First)).willReturn { Observable.just(TestResult.First) }
         return TestViewModel(testUseCase, testTracker)
     }
 }
 
-class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>,
-                    testTracker: BaseTracker<TestViewState, TestIntent>) :
-        BaseViewModel<TestIntent, TestAction, TestResult, TestViewState>(testUseCase, testTracker) {
+class TestViewModel(
+    testUseCase: BaseUseCase<TestAction, TestResult>,
+    testTracker: BaseTracker<TestViewState, TestIntent, TestViewAction>
+) : BaseViewModel<
+        TestIntent,
+        TestViewAction,
+        TestAction,
+        TestResult,
+        TestViewState
+        >(
+    testUseCase,
+    testTracker
+) {
 
     override fun intentFilter(): ObservableTransformer<TestIntent, TestIntent> =
             ObservableTransformer { observable ->
@@ -111,10 +122,10 @@ class TestViewModel(testUseCase: BaseUseCase<TestAction, TestResult>,
                 }
             }
 
-    override fun actionFrom(intent: TestIntent): TestAction =
+    override fun actionFrom(intent: TestIntent): Either<TestViewAction, TestAction> =
             when (intent) {
-                TestIntent.First -> TestAction.First
-                TestIntent.Second -> TestAction.Second
+                TestIntent.First -> action(TestAction.First)
+                TestIntent.Second -> action(TestAction.Second)
             }
 
     override fun initialViewState(): TestViewState = TestViewState.Idle
@@ -134,6 +145,11 @@ sealed class TestIntent : BaseIntent {
 sealed class TestAction : BaseAction {
     object First : TestAction()
     object Second : TestAction()
+}
+
+sealed class TestViewAction : BaseViewAction {
+    object First : TestViewAction()
+    object Second : TestViewAction()
 }
 
 sealed class TestResult : BaseResult {

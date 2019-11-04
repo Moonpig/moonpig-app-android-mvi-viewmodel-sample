@@ -11,8 +11,16 @@ import io.reactivex.ObservableTransformer
 
 class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                              productDetailTracker: ProductDetailTracker) :
-        BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailScreenViewState>(productDetailUseCase,
-                                                                                                                   productDetailTracker) {
+        BaseViewModel<
+                ProductDetailIntent,
+                ProductDetailViewAction,
+                ProductDetailAction,
+                ProductDetailResult,
+                ProductDetailScreenViewState
+                >(
+            productDetailUseCase,
+            productDetailTracker
+        ) {
 
     override fun intentFilter(): ObservableTransformer<ProductDetailIntent, ProductDetailIntent> =
             ObservableTransformer { observable ->
@@ -22,12 +30,12 @@ class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                 }
             }
 
-    override fun initialViewState(): ProductDetailScreenViewState = ProductDetailScreenViewState()
+    override fun initialViewState() = ProductDetailScreenViewState()
 
-    override fun actionFrom(intent: ProductDetailIntent): ProductDetailAction =
+    override fun actionFrom(intent: ProductDetailIntent) =
             when (intent) {
-                is ProductDetailIntent.Initial -> ProductDetailAction.LoadProductDetail(intent.productId)
-                is ProductDetailIntent.AddToBasket -> ProductDetailAction.AddProductToBasket(intent.productId, intent.quantity)
+                is ProductDetailIntent.Initial -> action(ProductDetailAction.LoadProductDetail(intent.productId))
+                is ProductDetailIntent.AddToBasket -> action(ProductDetailAction.AddProductToBasket(intent.productId, intent.quantity))
             }
 
     override fun reduce(previousViewState: ProductDetailScreenViewState, result: ProductDetailResult): ProductDetailScreenViewState =
