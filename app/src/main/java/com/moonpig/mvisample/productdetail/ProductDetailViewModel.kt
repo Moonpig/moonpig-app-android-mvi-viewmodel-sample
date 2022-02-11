@@ -4,15 +4,15 @@ import com.moonpig.mvisample.domain.productdetail.ProductDetailAction
 import com.moonpig.mvisample.domain.productdetail.ProductDetailResult
 import com.moonpig.mvisample.domain.productdetail.ProductDetailUseCase
 import com.moonpig.mvisample.mvibase.BaseIntent
-import com.moonpig.mvisample.mvibase.BaseViewModel
+import com.moonpig.mvisample.mvibase.LegacyBaseViewModel
 import com.moonpig.mvisample.mvibase.Visibility
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 
 class ProductDetailViewModel(productDetailUseCase: ProductDetailUseCase,
                              productDetailTracker: ProductDetailTracker) :
-        BaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailScreenViewState>(productDetailUseCase,
-                                                                                                                   productDetailTracker) {
+    LegacyBaseViewModel<ProductDetailIntent, ProductDetailAction, ProductDetailResult, ProductDetailScreenViewState>(productDetailUseCase,
+                                                                                                                     productDetailTracker) {
 
     override fun intentFilter(): ObservableTransformer<ProductDetailIntent, ProductDetailIntent> =
             ObservableTransformer { observable ->

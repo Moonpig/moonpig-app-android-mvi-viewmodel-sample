@@ -1,57 +1,57 @@
 package com.moonpig.mvisample.mvibase
 
-import android.arch.lifecycle.ViewModel
-import com.moonpig.mvisample.domain.mvibase.BaseAction
-import com.moonpig.mvisample.domain.mvibase.BaseResult
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.moonpig.mvisample.domain.mvibase.BaseUseCase
+import com.moonpig.mvisample.domain.mvibase.Maybe
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-abstract class BaseViewModel<I : BaseIntent, A : BaseAction, R : BaseResult, VS : BaseViewState>(private val baseUseCase: BaseUseCase<A, R>,
-                                                                                                 private val tracker: BaseTracker<VS, I>) :
-        ViewModel() {
+abstract class BaseViewModel<
+        Intention : Any,
+        ViewAction : Any,
+        Action : Any,
+        Result : Any,
+        ViewState : Any
+        >(
+    private val baseUseCase: BaseUseCase<Action, Result>,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    private val intentSubject = PublishSubject.create<I>()
-    private val viewStateObservable by lazy(::compose)
+    private val intentionSubject = PublishSubject.create<Intention>()
+    private val viewActionSubject = BehaviorSubject.create<Maybe<ViewAction>>()
+    private val stateSubject = BehaviorSubject.create<ViewState>()
 
-    fun bindIntents(intents: Observable<I>) {
-        intents.subscribe(intentSubject)
+    private lateinit var wiringDisposable: Disposable
+
+    fun bind(
+        initialIntention: Intention? = null,
+        intentions: Observable<Intention>,
+        handleViewState: (ViewState) -> Unit,
+        handleViewAction: (ViewAction) -> Unit
+    ): Disposable {
+
+        TODO()
     }
 
-    fun viewState(): Observable<VS> {
-        return viewStateObservable
+    abstract fun initialViewState(): ViewState
+    abstract fun actionFrom(intention: Intention): Either<ViewAction, Action>
+    abstract fun reduce(previousViewState: ViewState, result: Result): ViewState
+    open fun viewActionFrom(result: Result): ViewAction? = null
+
+    protected fun action(action: Action) = Either.Action(action)
+    protected fun viewAction(viewAction: ViewAction) = Either.ViewAction(viewAction)
+
+    companion object {
+
+        private const val viewStateKey = "viewState"
     }
-
-    /**
-     * We use `replay(1).autoConnect()` instead of a [io.reactivex.subjects.BehaviorSubject] to
-     * cache the last item. This is important as the BehaviorSubject will clear the last item if
-     * it is terminated. This might happen on simple views that just render out data and don't have
-     * any intent sources that stay open throughout the activity's lifetime.
-     */
-    private fun compose(): Observable<VS> =
-            intentSubject
-                    .compose(intentFilter())
-                    .doOnNext(tracker::trackIntent)
-                    .map(::actionFrom)
-                    .flatMap(baseUseCase::resultFrom)
-                    .scan(initialViewState(), ::reduce)
-                    .distinctUntilChanged()
-                    .doOnNext(tracker::trackViewState)
-                    .replay(1)
-                    .autoConnect()
-
-    protected abstract fun intentFilter(): ObservableTransformer<I, I>
-    protected abstract fun initialViewState(): VS
-    protected abstract fun actionFrom(intent: I): A
-    protected abstract fun reduce(previousViewState: VS, result: R): VS
 }
 
-interface BaseTracker<VS, I> {
-    fun trackViewState(viewState: VS)
-    fun trackIntent(intent: I)
+sealed class Either<out ViewAction : Any, out Action : Any> {
+    data class ViewAction<ViewAction : Any>(val value: ViewAction) : Either<ViewAction, Nothing>()
+    data class Action<Action : Any>(val value: Action) : Either<Nothing, Action>()
 }
 
-interface BaseViewState
-
-interface BaseIntent

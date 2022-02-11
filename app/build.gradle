@@ -48,6 +48,8 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
+    implementation "androidx.activity:activity-ktx:1.4.0"
+
     testImplementation "junit:junit:$junitCoreVersion"
     testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
     testImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"

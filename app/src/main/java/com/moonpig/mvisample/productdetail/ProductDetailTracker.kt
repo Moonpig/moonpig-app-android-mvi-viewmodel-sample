@@ -1,9 +1,9 @@
 package com.moonpig.mvisample.productdetail
 
 import android.util.Log
-import com.moonpig.mvisample.mvibase.BaseTracker
+import com.moonpig.mvisample.mvibase.LegacyBaseTracker
 
-class ProductDetailTracker : BaseTracker<ProductDetailScreenViewState, ProductDetailIntent> {
+class ProductDetailTracker : LegacyBaseTracker<ProductDetailScreenViewState, ProductDetailIntent> {
     override fun trackViewState(viewState: ProductDetailScreenViewState) {
         Log.d(ProductDetailTracker::class.java.simpleName, "ViewState: $viewState")
     }
