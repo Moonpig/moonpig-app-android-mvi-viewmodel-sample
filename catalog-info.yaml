@@ -1,9 +1,0 @@
-apiVersion: backstage.io/v1
-kind: System
-metadata:
-  name: moonpig-app-android-mvi-viewmodel-sample
-  annotations:
-    github.com/project-slug: Moonpig/moonpig-app-android-mvi-viewmodel-sample
-spec:
-  owner: moonpig-android
-  lifecycle: production
